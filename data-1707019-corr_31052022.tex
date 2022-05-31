@@ -1,0 +1,1254 @@
+% LaTeX support: latex@mdpi.com 
+% For support, please attach all files needed for compiling as well as the log file, and specify your operating system, LaTeX version, and LaTeX editor.
+
+%=================================================================
+\documentclass[data,article,accept,pdftex,moreauthors]{Definitions/mdpi} 
+
+%=================================================================
+% MDPI internal commands
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{7}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2022}
+\copyrightyear{2022}
+\externaleditor{Academic Editors: Vladimir Sreckovic, Milan S. Dimitrijević and Zoran Mijic %MDPI: Please add academic editor(s) if there is any.
+ }
+\datereceived{15 April 2022}
+\dateaccepted{30 May 2022}
+\datepublished{date}
+\hreflink{https://doi.org/} % If needed use \linebreak
+%\doinum{}
+%------------------------------------------------------------------
+\graphicspath{{figures/}} % path to folder with figures
+\usepackage{soul} % text highlighting \hl{}
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{Handling Dataset with Geophysical and Geological Variables on the Bolivian Andes by the GMT Scripts}
+
+% MDPI internal command: Title for citation in the left column
+\TitleCitation{Handling Dataset with Geophysical and Geological Variables on the Bolivian Andes by the GMT Scripts}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0002-5759-1089} % Add \orcidA{} behind the author's name
+%\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Polina Lemenkova \orcidA{}}%MDPI: 
+% \dagger,\ddagger
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Polina Lemenkova}
+
+% MDPI internal command: Authors, for citation in the left column
+\AuthorCitation{Lemenkova, P.}
+% If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address[1]{%
+Laboratory of Image Synthesis and Analysis, \'Ecole Polytechnique de Bruxelles, Universit\'e Libre de Bruxelles, Brussels, Belgium; polina.lemenkova@ulb.be or pauline.lemenkova@gmail.com; Tel.: +32-471860459} %Author: yes, everything is correct.
+
+% Contact information of the corresponding author
+%\corres{Correspondence: polina.lemenkova@ulb.be}
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{In this paper, an integrated mapping of the georeferenced data is presented using the QGIS and GMT scripting tool set. The study area encompasses the Bolivian Andes, South America, notable for complex geophysical and geological parameters and high seismicity. A data integration was performed for a detailed analysis of the geophysical and geological setting. The data included the raster and vector datasets captured from the open sources: the IRIS seismic data (2015 to 2021), geophysical data from satellite-derived gravity grids based on CryoSat, topographic GEBCO data, geoid undulation data from EGM-2008, and geological georeferences' vector data from the USGS. \mbox{The techniques} of data processing included quantitative and qualitative evaluation of the seismicity and geophysical setting in Bolivia. The result includes a series of thematic maps on the Bolivian Andes. Based on the data analysis, the western region was identified as the most seismically endangered area in Bolivia with a high risk of earthquake hazards in Cordillera Occidental, followed by Altiplano and Cordillera Real. The earthquake magnitude here ranges from 1.8 to 7.6. The data analysis shows a tight correlation between the gravity, geophysics, and topography in the Bolivian Andes. \mbox{The cartographic} scripts used for processing data in GMT are available in the author's public GitHub repository in open-access with the provided link. The utility of scripting cartographic techniques for geophysical and topographic data processing combined with GIS spatial evaluation of the geological data supported automated mapping, which has applicability for risk assessment and geological hazard mapping of the Bolivian Andes, South America.}
+
+% Keywords
+\keyword{cartography; spatial data; GIS; georeferencing; mapping; Bolivia; Latin America; geodesy} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+\subsection{Background}
+
+For many problems in Earth sciences, cartographic datasets are the key sources for spatial analysis {and} visualisation. {Spatial data have a great potential for many applications in various fields, such as geophysics, geology, and the environment}. However, the most important issue{ }in the mapping workflow consists of finding the {effective} algorithms of{ }processing {the} multi-source and heterogeneous {spatial} data. {In this} paper{,} the {integrated }use of the techniques of the Geographic Information System (GIS) and the Generic Mapping Tools' (GMTs) cartographic scripting tool set for processing geospatial{ }data {is proposed}.
+
+{Spatial} data {include} two major{ types of} format{, often used} in a mapping workflow: raster and vector. {The }fundamental differences in {their} structure entail various means of {their }handling and processing{. The use of scripts for processing} cartographic data {brings} significant{ }improvements to the mapping process \cite{CHEN2022105362,ORTOLANO201856, Lemenkova202203,OMRAN2016140,data5010008}. Examples of such applications include {the} modules of GMT for {cartographic} tasks of data {visualisation}. Effective processing of geospatial data by scripts is especially important for large datasets with global {Earth} coverage \cite{LEI2020202,XIA2018245,NATIVI20151,WAGEMANN2021104916}. The console-based data processing using scripts enables increasing the accuracy and speed of data processing in cartographic analysis and plotting. Therefore, using advanced geospatial software and tools is also of major importance in many GIS-related applications that include geospatial data processing, {e.g.,} machine learning {in} GIS \cite{Mori,1607434,ARABAMERI2021100848,ZUO2021105111,SUN201926}, data retrieval, exploration and processing \cite{BUCK2022121,Lemenkova202135,1369823}, spatial data formatting, handling and compression \cite{ZHU2022104166,data4030118,data6080081,DEMIRALTINTAS2021103743}, and geographic data modelling and analysis \cite{MA2021103858,Lemenkova202205,TAMIMINIA2020152}. 
+
+Raster data and images are often derived from remote sensing (RS) sources such as satellite images. Examples of using raster{ }data in {geographic} studies include satellite imagery, for instance  Sentinel-1 and 2A, used {for} mapping the high-resolution spatio-temporal dynamics of land use and land cover \cite{MERCIER2021107408,BALENZANO2021107345}. The wide {use} of the Landsat TM/ETM+ by ESA for geological and land cover mapping is {explained} by data availability and global coverage \cite{ALLENBY1987137,LOMBARDO,SAMARA}. The aerial Google Earth or the commercial geospatial data providers operating of large-scale aerial data for detailed mapping. More examples of raster data sources include hyperspectral imagery, InSAR largely used in geology{ } \cite{TALIB2022112793,LI2022114}, or LiDAR used for geomorphic computations or vegetation canopy height~\cite{NEUGIRG2016269,NAKAO2022119953}{. }Important{ }data sources for topographic mapping are {derived from} the SRTM DEM. 
+
+Using raster data as a source of {information} are often a case for land cover mapping and landscape analysis \cite{SZABO2019104187,RUJOIUMARE2016244,LI2021112670}. Scanned raster images in bitmap formats (jpg, bmp, tiff) provide {another} source of {information} aimed at retrospective data analysis {for} geospatial reconstructions \cite{KRAL2021107382,OSTAFIN2022107709}. Used as georeferenced raster layers in GIS, archived historical maps can be utilised as data sources for {evaluating landscape} dynamics and serve as {an} auxiliary source for geologic analysis and mineral resource management. Technically, processing raster data is based on the analysis of pixels on the image and, if necessary, the steps of vectorisation \cite{8937640,6723417,8810063}. In the advanced cases, the RS data can be processed using machine learning techniques. 
+
+Vector data, on the other hand, are often used to represent geographical information on the object-based level \cite{LI20121331,KOCH200623}. The information containing {ontologies} of vector data is included in the attribute tables of the associated GIS tables {or the} metadata of the layers~\cite{LI20121344}. Vector data sources include, e.g., the vectorised objects as georeferenced layers in GIS formats (e.g., {.shp} format of ArcGIS/QGIS). The integration and complementary use of vector {and} raster data can be {applied in} cadastral cartography and LiDAR altimetric data, providing information for the 3D vector-based {models} \cite{VIANAFONS2020110258}. A special feature of vector data consists of {the} object-based structure, which entails points, lines, or polygons formed by a variety of curves or points with coordinates in a spatial reference format. Thus, vector objects indicate {the} boundaries or depict the contours of geographic objects {varying} in geometry, form, size, shape, curvature, connectivity, and spatial resolution, {which depend} on {the} map scale \cite{GULER2021107755}.
+
+\subsection{Study Objectives}
+
+{This article presents} an integrative data-driven cartographic synthesis technique that enables processing vector geological {data} and raster geophysical data, while exploring all the advantages of GIS and GMT applied in one framework. Although existing GISs for geospatial data processing are widely available, directly using their functionality does not offer an intuitive, direct control on data handling as in the case of using scripts. In fact, various GIS software often provide the designed solutions for mapping the workflow{.} In contrast, {the} script-based technique provides more control on data processing. 
+
+This study is focused on processing {spatial} data {for} cartographic visualisation using geological, topographic, and geophysical datasets for Bolivia (Figure~\ref{fig1}). {The} integration of the vector and raster data in a structured {way} by means of various technical tools supports the increase of geographical and expert knowledge. Creating such a project with a special focus on the Bolivian Andes is built upon the data captured from the available open sources. The {study framework} is designed to visualise {the multi-sources} data {of }various formats. {The presented} series of maps is aimed at {contributing to} monitoring natural resources in a selected region of the geographically complex region of South America.
+
+\begin{figure}[H]
+	\includegraphics[width=12.0 cm]{Fig_01}
+	\caption{Topographic map of the study area. Visualisation: GMT. Source: author.\label{fig1}}
+\end{figure} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Materials and Methods}
+
+Methods of GIS mapping and geoinformatics passed several epochs from their onset in the 1970s, including rapid development of computer technologies and progress in spatial data standards and formats. {Besides, the approaches related to }remote sensing{, }Earth observation, and geological data{ processing largely use spatial data} \cite{Allenby1987,Lindh2021,Lemenkova202127}. {\mbox{Although these} approaches have advantages in geospatial data processing, those methods are not efficient enough for processing large datasets in real time, which requires} machine-based cartographic data visualisation. Currently, the contemporary methods of spatial data processing include a high degree of computing and scripting with the recent application of machine learning, scripting, and programming in geosciences \cite{Lietal,Lemenkov2021a,Zhou,Lemenkov2021b}. 
+
+\textls[-20]{The current study {aimed} to identify the distribution and magnitude of earthquakes in the Bolivian Andes in the context of the geologic, geophysical, and topographic situation. The study {was} performed using the technical integration of QGIS and GMT scripting tools {applied} to {Bolivia. The} topographic elevation data, geologic provinces and units, {as well as} seismic events obtained from the IRIS database {were mapped}. The five full scripts used in this study for GMT mapping are available in the GitHub repository of the author with public open-access}: \url{https://github.com/paulinelemenkova/Mapping\_Bolivia\_GMT\_Scripts} (accessed on 31.05.2022).
+
+The topographic map (\hl{Figures} %MDPI: Figure 7 is cited before Figures 2-6, please check if this should be invalid citation or move Figure 7 below this paraghraph and revise each figure citation.
+~\ref{fig1} and \ref{fig7}) was mapped as a background {for the} IRIS seismic data. {It was derived} from {the} General Bathymetric Chart of the Oceans (GEBCO) gridded bathymetry and topography dataset \cite{Schenke2016}. {The} GEBCO presents consistent and accurate digital elevation data covering the Earth{,} largely used in {the} Earth sciences {as a} reliable data source. The unprecedentedly high resolution (15 arc second) of {the} GEBCO grid enables using it as a fine cartographic grid both for topographic mapping and as a background for {the} overlaying thematic maps \cite{Lemenkova2020b}{.} 
+
+{The} EGM-2008 \cite{Pavlis} digital geoid model {was used} to show {variations} in gravity over the territory of Bolivia that {correlate} with the topographic map {(}\hl{Figures} %MDPI: Figure 4 is cited before Figures 2 and 3, please check if this should be invalid citation or move Figure 4 below this paraghraph and revise each figure citation.
+~\ref{fig1} and \ref{fig4}). {A} general increase of gravity values {is notable} in the southwest direction, which coincides {well} with the {geographic} extent of {the} Central Andes. The data on{ }gravity (\hl{Figures} %MDPI: Figures 5 and 6 are cited before Figures 2 and 3, please check if this should be invalid citation or move Figures 5 and 6 below this paraghraph and revise each figure citation.
+~\ref{fig5} and \ref{fig6}) were obtained {from} the repositories of Scripps Institution of Oceanography \cite{Sandwelletal2014}. 
+
+The IRIS database of the {world's} seismicity {was} applied for Bolivia for the period of 2015–2021. {It} was used to map the earthquake events recorded in the Central Andes for the six-year time span (\hl{Figure} %MDPI: Figure 7 is cited before Figures 2 and 3, please check if this should be invalid citation or move Figure 7 below this paraghraph and revise each figure citation.
+~\ref{fig7}). Several columns of the initial table in CSV format presented seismic parameters of the earthquakes (depth and magnitude), the coordinates and time of the event (date-month-years), a {brief} description, and the location. The {table recording} 3000 seismic events in Bolivia {was} converted from CSV to the NGDC format {for plotting in} GMT (\hl{Figure} %MDPI: Figure 7 is cited before Figures 2 and 3, please check if this should be invalid citation or move Figure 7 below this paraghraph and revise each figure citation..
+ \ref{fig7}). The study employed existing GIS methods \cite{Hubbard,Lemenkova202135,Suetova,Lemenkova202125,Klauco2013,Klauco2017} and presents two maps (Figures \ref{fig2} and \ref{fig3}) made using the QGIS software \cite{QGIS}.
+ 
+ \vspace{-6pt}
+ \begin{figure}[H]
+	\includegraphics[width=14.0 cm]{Fig_02}
+	\caption{\hl{Geologic} %MDPI: Figure moved after its first ctiation. Please confirm.
+ map of Bolivia and surrounding countries. Visualisation: QGIS. Source: author.\label{fig2}}
+\end{figure} 
+
+\textls[-20]{Besides {the} GIS, the study applied {the GMT}. {The GMT,} developed and continuously maintained by \cite{Wesseletal2019}{, was used }for mapping{ }Figures~\ref{fig1} and~\ref{fig4}--~\ref{fig7}. In contrast to the traditional GIS, the GMT refers to a console-based scripting framework {aimed at} automated plotting of the geospatial data. The cartographic approach {of GMT enables} effective {mapping} and data visualisation{, }based on shell scripting \cite{Gauger,Lemenkova2020a}. {It} includes a variety of data processing steps{, }such as conversion, reshaping{, }reformatting, {modelling}, spatial analysis, and visualisation. \mbox{The process} of GMT mapping was adapted based on the{ }previous {studies} \cite{Lemenkova202140}.}
+
+\begin{figure}[H]
+	\includegraphics[width=14.0 cm]{Fig_03}
+	\caption{\hl{Geologic} %MDPI: Figure moved after its first ctiation + 1 paraghraph (because of blank space). Please confirm.
+ provinces in Bolivia and surroundings. Visualisation: QGIS. Source: author.\label{fig3}}
+\end{figure} 
+
+\section{Study Area}
+
+\textls[-15]{Identifying {the} correlations between {the} geological structure{, }topography, and {geophysics and seismicity} gives better insights into our understanding of the geological hazards and risk assessment in the mountainous regions{ shown in previous works} \cite{Falcone,Mori,Chang,Fayjaloun}. The study object is {presented by} the Bolivian segment of {the} Andes Mountains. The Andes Mountains {present} a unique geologic, geomorphological, and tectonic {structure} built upon the thickest crust on Earth. The Andes are the longest continental mountain range {stretching} along the western margins of  South America and {crossing} several countries including Bolivia (Figure~\ref{fig1}).}
+
+\textls[-20]{The Andes are the key geological object of Bolivia directly affected by their tectonic history.} \mbox{The geological} evolution of the Bolivian {segment of} the Andes has underwent a long multi-stage period of formation, which has been reported and described in detail in previous studies \cite{Andersonetal,Arguedas} and in some earlier fundamental books on South American \mbox{geology~\cite{Forbes,Suarez,Ahfeld}}. Bolivia occupies the Central Andes segment with Altiplano, the world's 2nd highest mountain plateau after Tibet. The tectonics of the Andes largely {controls} the geomorphology of the Bolivian mountainous lakes (shape, orientation, and geometry), primarily by a nearly orthogonal fracture pattern from the underlying granitic basement (Brazilian Shield) and, secondarily, by the tectonic movements: ancient global fracture pattern, principal compressive stress, downwarping and uplifting of the Beni Basin during the Cenozoic Andean orogeny \cite{Allenby1988}. 
+
+The{ }tectonics{, }geology,{ and seismicity }of {the} Central Andes have been {previously} described by many researchers \cite{Ramos,Fernandez,Funning}. {The specific features of the Central Andes} have drawn the attention of Earth scientists in various disciplines, e.g.{, }hydrogeologists \cite{Lima2021a,Lima2021b}, geophysicists \cite{Aviles,Borsa}, and seismologists \cite{Dorbath,Dahm}. The historic evolution of the Bolivian Andes underwent several stages during the early history of the Earth. Among the notable geologic events of Bolivia {is} the San Ignacio Orogeny, which reshaped the terrane through {the} deformations accompanied by {the} voluminous tectonic granite {intrusions and deformations} of the sediments \cite{Boger}. 
+
+The dominating units in central Bolivia (Figure~\ref{fig2}) are presented by the Cambrian-Ordovician (CmO) outcrops,{ }which largely contrast with a very complex disposition of several layers in the west of the country in the Central Andes region: {Ordovician-Silurian} (OS), Devonian (D), Silurian (S), Tertiary (T), and {Cretaceous-Tertiary volcanics (Cv)}. The eastern part of the country{, presented by }the Amazon forests{, }is occupied by the Precambrian outcrops (pC), which well correspond to the extent of the Brazilian Shield (Figure~\ref{fig2}). {The} geological structures of the Bolivian orogeny {are generally }oriented {in} the NW direction off Amazonia{, }following the extent of the Central Andes. The most important geological provinces of Bolivia (Figure~\ref{fig2}) include {the} Madre dos Dios in the north, mostly covered by the{ }Tertiary rocks (T), the Brazilian Shield to the east, the Oran-Olmedo Basin to the south (covered by the Cambrian-Ordovician outcrops), the Beni Basin in the central-northern segment of the country, and the Andean Province to the west (covering the Central Andes) with {the} intrusion of the Altiplano Basin (Figure~\ref{fig2}). 
+
+{The} Andes act as a source of precious mineral and geological resources in Bolivia. {\mbox{This is} caused by the} intensive tectonic processes and orogenesis {in the past, which took place} in {these geological} provinces (Figure~\ref{fig3}). The formation of {precious} metals in the Andes includes {a system of} complex petrographic and geochemical processes that result{ }in the evolution of magmas and lavas that underwent fractionation and assimilation in the Earth's crust \cite{Redwood}. As a result, the mining industry {}has had a dominant position in the country's economy since {the }16th Century. {As a result, Bolivia holds a} leading position{ }in {the} reserves of tin, zinc, silver, copper, gold, tungsten, lead, {and} antimony \cite{Iqbal,DiazCuellar,Guedron,Pavilonis}. {Besides,} the Bolivian Salar de Uyuni salt flat is the world's largest lithium deposit \cite{Narins,Sanchez}. 
+
+{The} regional geomorphology of {the} Andes affects a wide variety of {the} interconnected {processes} {in} Bolivia {linking} hydrology, environment, soils, ecology, climate, and landscapes. For instance, the tectonic faults, lineaments, and structure of the underlying rocks cause variations in the geomorphic and hydrological fluvial structure of {the country}. This was recorded within the drainage network of the Andean foreland, which is preserved in the {palaeochannels} of the Bolivian Amazon, {varying} in sinuosity, width, and the pattern of the Amazon rivers \cite{Plotzki}. {The types of} landscapes of Bolivia vary according to their {specific} location within {the} Andes, which serve as a natural barrier to the air masses controlling climate {though} fluctuations in temperature{, }humidity, and water balance{.} 
+
+Various regions of the Bolivian Andes give place to the National Parks and protected nature conservation zones \cite{Baumannetal2018,Thomasetal,Burbridge}. Besides {the} mountainous regions, the forests of the Bolivian Amazon provide {the} ecological habitat for {}endemic species \cite{Cadima}, which demonstrates the environmental significance of this region. Besides {the climatic and geologic} factors affecting the landscapes, {landscape} changes in Bolivia {are also influenced by } anthropogenic activities. {For example,} according to the study in the Iroco and Cueva Bautista regions in the highlands of Bolivia, human settlements in the high-altitude ecosystems (>3800 m asl) occurred, at least, by 13,000 years BP \cite{Capriles}. 
+
+\textls[-20]{At the same time, the seismicity of the Andes is high with repetitive earthquakes of various focal depth, rupture size, and magnitude \cite{Rivadeneyra,Tono}. In turn, earthquakes are closely associated with tectonic activity and zones of plate subduction. Magma evolution and assimilation at the subduction zones of the Andes significantly affected the geologic setting in South America {in the past} \cite{Gonzalezetal2020,Lemenkova2019a}{. The }earthquakes usually have negative consequences and involve such hazardous events as landslides, rockfalls, and ground shaking. {\mbox{This leads} to} damaged and destroyed buildings, ruined bridges and other constructions, {losses} in economics and financial instability, {and in the worst cases}, affected or lost human lives. {\mbox{The possibility} of geologic hazards in the mountainous regions of the Central Andes resulted} in intensive geological investigations of Bolivia{, as reported in earlier studies} \cite{Petersen,Barone,Zhu,Ekstroem1995}.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+In {the} present study{,} the geophysical{ }and geological {maps} of Bolivia were {visualised and }analysed for{ }comparison with{ the }seismicity{, }topographic elevations,{ and }geomorphological variability{ }of the country. The topography of Bolivia (Figure~\ref{fig1}) shows regional variations that well reflect {the} Quaternary geologic history{, including} the periods of glaciations {in the high} mountains {of} the Bolivian Andes {during the} Pleistocene, e.g.{, the} Cordillera Real \cite{Heine}. {The} glaciation in {the} Bolivian Andes experienced several {periods} in its early geologic history. {These} include {the} Tertiary and Early Pleistocene{ }(>790 ka), Middle Pleistocene{ }(790–132 ka){, }Late Pleistocene{ }(132–11.7 ka),{ and }Holocene{ }(11.7 ka to the present) \cite{Frenierre}. The results of {these} glaciations remained as {a system of the} bedded slope deposits on {the} moraine ridges in the Bolivian Andes. 
+
+\vspace{-6pt}
+\begin{figure}[H]
+	\includegraphics[width=12.0 cm]{Fig_04}
+	\caption{\hl{Geoid} %MDPI: Figure should be moved after its first ctiation. Please check all citations of figures if you move this figure after its first citation.
+ model of Bolivia. Visualisation: GMT. Source: author.\label{fig4}}
+\end{figure} 
+
+{The} Late Pleistocene glaciations also formed {the} megafans of {the} Gran \mbox{Chaco---a huge} plain in eastern Bolivia and the main biogeographic biome of South America. Furthermore{, the} contrasting glaciation formed {a series of} large piedmont fans of {the} Andes that were developed during {the} colder and seasonal conditions and dry–wet intense seasons and enhanced rainfalls by {the} orographic effects of the Andes \cite{Latrubesse2009,Latrubesse2012}. {A complex} interrelation of the vegetation, climate, and soils can be illustrated by the reduced forest cover {due to the} increased aridity in {the} selected landscapes{, }soil formation, and intensive sedimentation in the {dense} forest cover in the Bolivian Chaco \cite{May2008}. Besides glaciation, other external factors that strongly affected and shaped the topography of Bolivia include {the} fluvial and aeolian interactions, the climate, and biogeographic effects. These mostly formed the Gran Chaco and {selected} regions of Amazonia through {the distribution of the} subtropical semi-deciduous vegetation {and associated specific soil types in} the {piedmonts of the} Andes.
+
+The geomorphological patterns initially formed by the {geological} processes are mirrored in fluvial belts, lacustrine patterns, and riverine meanders {in} Bolivia and {shaped the} landscapes of the country \cite{Dumont}. {The} landscapes in eastern Bolivia located along the southern margin of the Amazon basin are {largely} affected by climate {through the} strong hydrological and climatic seasonality, e.g.{, }high wind speeds and aeolian processes. \mbox{This affects} \textls[-20]{the geomorphology and {the} environment of {the} eastern {part of the country,} forming special aeolian landforms{, such as} linear sand streaks and ridges, parabolic and elongate morphological structures, dunes, sand sheets, and mega-ripples. {Hence}, climate and aeolian processes {largely} control the environmental, vegetation, and soil {setting in the country} \cite{May2013}.} 
+
+\vspace{-6pt}
+\begin{figure}[H]
+	\includegraphics[width=12.0 cm]{Fig_05}
+	\caption{\hl{Free-air} %MDPI: Figure should be moved after its first ctiation. Please check all citations of figures if you move this figure after its first citation.
+ gravity map of Bolivia. Visualisation: GMT. Source: author.\label{fig5}}
+\end{figure} 
+
+\textls[-20]{The geologic maps (Figures~\ref{fig2} and \ref{fig3}) reflect the current state of the processes of solid Earth physics in the Andes. Thus, the metamorphic rocks and outcrops of various geologic epochs experienced solid-state mineral transformations due to changes in pressure and temperature in the crust and mantle of the Earth and record {the} geological periods, heating, seismic processes, and cooling, which {in turn}, reflect the tectonic {processes} they were formed {in} \cite{Holder}. As a result, {a} complex geological history of {the} Bolivian Andes reflects its regional geology and petrographic setting, as well as the origin, distribution, and geochemistry of {the} minerals \cite{Tapia}. }
+
+{The} regional undulations of {the} geoid (Figure~\ref{fig4}) well correlate with the topography of the country. {For instance}, the values of the geoid {increase }westward exceeding 34 m, which well correlates with the geomorphology of the Central Andes. {In general, the} isolines increase towards the west of Bolivia. In contrast, negative values of {the} geoid \mbox{(from 10 to $-$10)} are visible in the NE region {and} mostly cover the Amazon region of Brazil. The Beni Basin of Bolivia (Figure~\ref{fig3}) demonstrates {a} slight decrease in data (from 20 to 16 m){,} while {central} regions of the Madre dos Dios Basin {show} a local increase in {the} geoid values (up to 32 m in the surroundings of Madidi National Park).
+
+\vspace{-6pt}
+\begin{figure}[H]
+	\includegraphics[width=12.0 cm]{Fig_06}
+	\caption{\hl{Vertical} %MDPI: Figure should be moved after its first ctiation. Please check all citations of figures if you move this figure after its first citation.
+ gravity gradient in Bolivia. Visualisation: GMT. Source: author.\label{fig6}}
+\end{figure} 
+
+{The} comparison of {the} geological map in Figure~\ref{fig2} with {the} geoid model in Figure~\ref{fig4} {shows a distinct correlation between these two}. The distribution of the geologic folds {situated} westward off the Cambrian-Ordovician outcrops well repeats the dense and steep increase in {the} isolines of the geoid detecting the increase of {the} gravity, which {in turn}, well correlates with the {extent of the} mountain areas of the Andes (red {colour} areas in Figure~\ref{fig4} show values of the geoid over 35 m). The correlation in changes of the free-air gravity (Figure~\ref{fig5}) and vertical gravity gradient (Figure~\ref{fig6}) with {the topography} (Figure~\ref{fig1}) and {geologic setting} (Figure~\ref{fig2}) are found by {the comparison of} these maps, further from the Andes to the Amazonia area and the Gran Chaco region. In the inner western region of the Andes (Cordillera Occidental){,} a series of volcanoes were detected and mapped (Figure~\ref{fig7}),{ showing a certain} correspondence with {a} higher magnitude of earthquakes {(}M 3.4 to 4.0 and 4.1 to 4.7). 
+
+\begin{figure}[H]
+	\includegraphics[width=12.0 cm]{Fig_07}
+	\caption{\hl{Seismicity} %MDPI: Figure should be moved after its first ctiation. Please check all citations of figures if you move this figure after its first citation.
+ in Bolivia and the Central Andes. Visualisation: GMT. Source: author.\label{fig7}}
+\end{figure} 
+
+The {analysis of} the values of the free-air gravity (Figure~\ref{fig5}) and vertical gravity (Figure~\ref{fig6}) demonstrates {a} very good correlation with the local lacustrine and riverine depressions of the mountainous lakes in Bolivia (Laguna Rogagua, Laguna San Luis), the rivers of Amazonia, the regional depression of {the} Gran Chaco on the border with Paraguay, and the piedmonts of the Andes (dark blue {colours} in Figures~\ref{fig5} and \ref{fig6}). In contrast, the highest elevation peaks of the Bolivian Andes (Cordillera Real, Cordillera Occidental, and Altiplano) well correlate with the highest values in {the} geophysical data. The correlation of the gravity data with the geoid (Figure~\ref{fig4}) well {exhibits} the lowest geoid values in the regions of the lower gravity in Figures~\ref{fig5} and \ref{fig6} and the saddle-like local depression in the region of the city La Santísima Trinidad (central Bolivia), showing local topographic depression. 
+
+\textls[-10]{The overall distribution of the earthquakes in Bolivia (Figure~\ref{fig7}) {indicate} a good correlation with {the geological} extent of Cordillera Occidental, followed by Altiplano and Cordillera Real. In total, 3000 records have been assessed using {the} IRIS database for {the period of} 2015--2021. In general, the higher seismicity level of Bolivia is clearly visible in the westernmost region of the country. The earthquake with the least {moment} magnitude (1.8) was detected 17 km ESE of {the} Iquique, Chile, at {a depth of} 20 km. \mbox{In contrast}, the most significant, very deep earthquake events are located 211 km S of Tarauaca, Brazil (620.6 km, {moment} magnitude 7.6), and at 173 km WNW of Iberia, Peru, with a depth of 606.2 km.}
+
+The most significant earthquake {in} Bolivia was located 11 km NNE of Carandayti with {a} depth of 559 km and {a moment} magnitude of 6.8. Furthermore, some significant earthquakes within the strongest magnitude (above 7) were located in Peru: (1) 140 km WNW of Iberia, Peru, which took place in 2018 with {a moment} magnitude of 7.1 at {a} depth of 630 km; (2) 38 km SSW of Acari, Peru, also dated 2018, with {a moment} magnitude of 7.1 located at {a} depth of 39 km (shallow earthquake). Thus, one can conclude that the most significant earthquake during the last 6 years (2015--2021) {in} Bolivia did not exceed {a moment} magnitude of 7.0, which indicates a {rather} lower seismic activity in Bolivia and less risk to {the} population{, if compared, for example,} to Peru. 
+
+\section{Discussion}
+
+\textls[-10]{Using scripting techniques of GMT has many applications in geosciences,} \mbox{for example} the {analysis of the} geologic setting of the Earth, climate modelling, exploring the atmosphere--ocean--solid earth interactions, {which require} advanced mapping, and many more. \linebreak \mbox{Rapid processing} of maps by GMT enables producing a series of maps, which is a crucial source of geo-information for such tasks. To fully utilise the potential of GMT, the abilities and advantages of {the} modern scripting approaches should be used. In this research, I demonstrated the functionality of GMT and QGIS for {the} thematic mapping of the Andes region {using} the geological and geophysical datasets {available from the open sources}. Currently{, the} geo-information data are available online in many sources, which increases the need for rapid and robust processing of these data, based on {the} availability. 
+
+To do this, I introduced a data-driven approach of GMT and QGIS for thematic geological--geophysical mapping of the Andes region, Bolivia. Using the functionality of this program, this paper presented a workflow where I showed that it performs well on cartographic data processing without the manual tedious workflow usually applied \mbox{in cartography}. I extracted the geological features of regional objects in the Andes, mapped them as layers using QGIS, and derived the information containing the geological structure of the country: geological units including outcrops of various geologic time: Precambrian-Devonian, {Palaeozoic}, Carboniferous, Cambrian, Ordovician, Permian, {Tertiary} Jurassic, Mesozoic, Cenozoic, Silurian, Triassic, and Quaternary as the major units. The algorithms of GMT processed well relatively large files (each raster file mapped for visualisation of the geoid, gravity, and seismicity has a size of several hundreds of MB) and converted these data into GMT native format for processing. Some complex regions of seismicity with overlapped sources of earthquakes were visualised using various colours and sizes of legend units for a better interpretation. Graphical representations of the maps were illustrated in relevant sections. 
+
+{Mapping} multi-source geo-information data are based on {the} processing and visualising {of} relevant thematic layers showing the geological and geophysical features of the target objects{, such as} free-air gravity anomalies, vertical gravity gradients, earthquakes, and other concepts. The major principle of GMT {consists of} creating the {lines} of code based on {its} syntax language. For instance, I set up experimentally the projection and selected colour palettes for each corresponding {geographic} phenomenon to better show the variations \mbox{in levels}{. Such adjustments enabled better} indicating the correlations between the topography and geophysics of the Andes region{. Moreover, the integrated use of the techniques of }QGIS and GMT {was used} to identify the relationships between the geological and geophysical phenomena of the Earth through the prepared maps. Based on the setup parameters of GMT, {a }series of maps {was created using a machine-based approach} using scripts run from the console{. A }step-by-step cartographic process applied for the presented maps {is shown in the scripts available in the GitHub repository with the provided link}.
+
+\textls[-20]{This workflow arrived at {the} data processing and visualisation on the presented series of maps {showing} the geologic, {geophysical,} and topographic {features} of Bolivia. \mbox{However, certain}} steps in {a} cartographic workflow require manual adjusting and improvements in {}QGIS compared to {}GMT, which demonstrates a higher level of automation in the {spatial} data processing {of the latter}. The most geologically complicated regions (folds in the Bolivian Andes) were mapped using {the} enlarged zoom, to gain more insights {into} the visual characteristics of the small areas ({e.g.,}see the Devonian and Ordovician outcrops in Figure~\ref{fig2}), {as well as} to discriminate the strata from the undifferentiated areas. To do so, I {enlarged the} selected areas on the map{ }and controlled {the} visualisation manually using a zoom function of QGIS. Specifically, I identified {the} densely interspersed outcrops of {the} Cretaceous-Tertiary volcanics (Cv), Precambrian-Devonian (AD), and {Palaeozoic} (PZ) units{ }in the Bolivian Andes, which demonstrated a {distinct} correlation {between the} gravity anomaly and {the} topographic heights {of} the same territory. 
+
+This study presented an integrated application of the GMT scripting tool set and {the} QGIS software {used} for mapping the geological and geophysical {features} of Bolivia in a semi-automatic regime {in} GMT and {a} manual {approach in} QGIS. I noted that while using a reliable software tool is a major task of any cartographic {workflow}, there are still more algorithms that need to be {adjusted} in GMT for a more automated \mbox{cartographic workflow}. Processing geo-information{ is} an essential part of geophysical and geological research, having its specifics compared to the topographic or environmental mapping: {the} interpretation of {the} geophysical anomalous fields, visualising seismic events as {a series of} earthquakes {with different magnitudes and depths, detecting} geoid undulations {using} isoline directions and interpretation, and smooth data conversion from {the} seismic IRIS catalogue into GMT, {to mention a few of such tasks. This paper presented an example of such a study showing the integrated use of GMT and QGIS for processing the} geological, topographic and geophysical data{ with the special example of Bolivia, South America.} 
+
+\section{Conclusions}
+
+In this study, a {data-driven} cartographic approach for data processing was presented using an example of scripting techniques of GMT applied for raster-based data and {}GIS-based mapping for vector data. By exploring {the} principles of {the} console-based mapping in {GMT, }this study {visualised and evaluated} the geophysical parameters that capture the intrinsic geologic properties of the Bolivian Andes{, as demonstrated through} the existing links {on} a series of maps. The study also {used} the modular technique of GMT to increase the speed, accuracy, and effectiveness of mapping. {Cartography as an important discipline among the} Earth sciences has experienced {technical advances with the development of programming}. {New methods used for} spatial data processing{ have enabled a more effective processing of the complex datasets for modelling the Earth} \cite{Bar,LOMBARDO,Lemenkova2020e}. {This enables obtaining} new insights into the correlations among the Earth phenomena{. This increases the possibilities of the traditional }GIS {used for mapping} spatial data \cite{Millington,Lemenkova202137}. 	
+
+\textls[-15]{GIS-based mapping is used for integrated thematic maps{ }or in risk assessment studies \cite{Vella,Lemenkova202120}. Geological GIS-based mapping {is} largely supported by visualisation of the provinces and units \cite{Nedel}, statistical graphs, and plotting for hydrocarbon resource \mbox{analysis \cite{Jemio}}. Other approaches include geophysical {and geochemical data} \mbox{analysis \cite{Collinson,Lindh2022,Ocola}} or gravimetric geoid modelling \cite{Corchete}. }{The existing} GIS applications {of} mapping Bolivia are presented in studies of {the} ecosystem services combining quantitative and qualitative data and spatial GIS {to} assess {the} environmental changes \cite{Hinojosa}. In contrast to {the} thematic applications of GIS {specifically for} Bolivia, using scripting techniques {was} presented {as a special opportunity} of {machine-based} cartography. Specifically, the scripting approach provides advantages {in Earth studies in geological, geophysical, and geotechnical modelling of soil data, seismic analysis and simulation, and risk mitigation and vulnerability \mbox{assessment~\cite{Falcone,Lindh2021b,Chang,Fayjaloun,Petersen}}. {The advantages of scripts can be explained by} the increased speed of {data processing} and the accurate {plotting} and machine-based {workflow} routine, which {significantly} minimises man-made errors and misprints. \textls[-20]{These include such improvements as automated mapping, precise {data handling,} automated re-projecting{, }or processing {big} data.}
+
+This paper contributes to the {increase} of {the} geographic knowledge of Bolivia by {presenting} an integrated framework {of} the geological, topographic, seismic, and geophysical data {processing} by means of GIS and GMT{. }Specifically, it demonstrated that using scripts enables meeting {the} high demands of contemporary cartography, e.g.{,} spatial {analysis, computing, and} visualisation of {the} multi-format data for an \mbox{integrated analysis}. \textls[-20]{\mbox{A structured} analysis of the {data} was performed to incorporate {the} insights {into} the geologic {analysis using} regional characteristics of lithology and geological provinces and basins of Bolivia{, a special, unique region of the Central Andes, South America}}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{6pt} 
+
+\funding{\hl{ } %MDPI: Please add this section.
+}%Please add: ``This research received no external funding'' or ``This research was funded by NAME OF FUNDER grant number XXX.'' and and ``The APC was funded by XXX''. Check carefully that the details given are accurate and use the standard spelling of funding agency names at \url{https://search.crossref.org/funding}, any errors may affect your future funding.}
+
+\institutionalreview{\hl{ } %MDPI: Please add this section. If there should be one.
+}%In this section, you should add the Institutional Review Board Statement and approval number, if relevant to your study. You might choose to exclude this statement if the study did not require ethical approval. Please note that the Editorial Office might ask you for further information. Please add “The study was conducted in accordance with the Declaration of Helsinki, and approved by the Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies involving humans. OR “The animal study protocol was approved by the Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies involving animals. OR “Ethical review and approval were waived for this study due to REASON (please provide a detailed justification).” OR “Not applicable” for studies not involving humans or animals.}
+
+\informedconsent{\hl{ } %MDPI: Please add this section. If there should be one.
+}%Any research article describing a study involving humans should contain this statement. Please add ``Informed consent was obtained from all subjects involved in the study.'' OR ``Patient consent was waived due to REASON (please provide a detailed justification).'' OR ``Not applicable'' for studies not involving humans. You might also choose to exclude this statement if the study did not involve humans.
+%Written informed consent for publication must be obtained from participating patients who can be identified (including by the patients themselves). Please state ``Written informed consent has been obtained from the patient(s) to publish this paper'' if applicable.}
+
+\dataavailability{The GitHub repository of the author with available GMT scripts: \url{https://github.com/paulinelemenkova/Mapping\_Bolivia\_GMT\_Scripts} (\hl{accessed on}%MDPI: Please add accessed date if necessary.
+).} 
+
+\acknowledgments{The author thanks the Reviewers and Editor for the review and \hl{editing} %MDPI: Please check if this is for English editing.
+ of this manuscript.}
+
+\conflictsofinterest{The author declares no conflict of interest.} 
+
+\abbreviations{Abbreviations}{
+The following abbreviations are used in this manuscript:\\
+
+\noindent 
+\begin{tabular}{@{}ll}
+CSV & \hl{Comma-Separated Values} %MDPI: Please check if these words should be capitalized as others below.
+ \\
+EGM & Earth Gravitational Model \\ 
+EGM2008 & Earth Gravitational Models of 2008\\
+GEBCO & The General Bathymetric Chart of the Oceans \\
+GIS & Geographic Information System \\
+GMT & Generic Mapping Tools \\
+QGIS & Quantum GIS \\
+IRIS & Incorporated Research Institutions for Seismology \\
+NGA & National Geospatial-Intelligence Agency \\
+NGDC & National Geophysical Data Center \\
+NOAA & National Oceanic and Atmospheric Administration \\
+SIO & Scripps Institution of Oceanography \\
+SRTM & Shuttle Radar Topography Mission \\
+USGS & United States Geological Survey 
+\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{adjustwidth}{-\extralength}{0cm}
+\reftitle{References}
+\begin{thebibliography}{999}
+
+\bibitem[Chen \em{et~al.}(2022)Chen, Judge, and Hulse]{CHEN2022105362}
+Chen, C.; Judge, J.; Hulse, D.
+\newblock PyLUSAT: An open-source Python toolkit for GIS-based land use
+ suitability analysis.
+\newblock {\em Environ. Model. Softw.} {\bf 2022}, {\em
+ 151},~105362.
+https://doi.org/10.1016/j.envsoft.2022.105362.
+
+\bibitem[Ortolano \em{et~al.}(2018)Ortolano, Visalli, Godard, and
+ Cirrincione]{ORTOLANO201856}
+Ortolano, G.; Visalli, R.; Godard, G.; Cirrincione, R.
+\newblock Quantitative X-ray Map Analyser (Q-XRMA): A new GIS-based statistical
+ approach to Mineral Image Analysis.
+\newblock {\em Comput. Geosci.} {\bf 2018}, {\em 115},~56--65.
+https://doi.org/10.1016/j.cageo.2018.03.001.
+
+\bibitem[Lemenkova(2022)]{Lemenkova202203}
+\textls[-20]{Lemenkova, P. Console-Based Mapping of Mongolia Using GMT Cartographic Scripting Toolset for Processing TerraClimate Data.}
+\newblock {\em Geosciences} {\bf 2022}, {\em 12},~1--36.
+https://doi.org/10.3390/geosciences12030140.
+
+\bibitem[Omran \em{et~al.}(2016)Omran, Dietrich, Abouelmagd, and
+ Michael]{OMRAN2016140}
+Omran, A.; Dietrich, S.; Abouelmagd, A.; Michael, M.
+\newblock New ArcGIS tools developed for stream network extraction and basin
+ delineations using Python and java script.
+\newblock {\em Comput. Geosci.} {\bf 2016}, {\em 94},~140--149.
+https://doi.org/10.1016/j.cageo.2016.06.012.
+
+\bibitem[Cadieux \em{et~al.}(2020)Cadieux, Kalacska, Coomes, Tanaka, and
+ Takasaki]{data5010008}
+Cadieux, N.; Kalacska, M.; Coomes, O.T.; Tanaka, M.; Takasaki, Y.
+\newblock A Python Algorithm for Shortest-Path River Network Distance
+ Calculations Considering River Flow Direction.
+\newblock {\em Data} {\bf 2020}, {\em 5}, 8.
+https://doi.org/10.3390/data5010008.
+
+\bibitem[Lei \em{et~al.}(2020)Lei, Tong, Zhang, Qiu, Wu, Lai, Li, Guo, and
+ Zhang]{LEI2020202}
+Lei, Y.; Tong, X.; Zhang, Y.; Qiu, C.; Wu, X.; Lai, G.; Li, H.; Guo, C.; Zhang,
+ Y.
+\newblock Global multi-scale grid integer coding and spatial indexing: A novel
+ approach for big earth observation data.
+\newblock {\em ISPRS J. Photogramm. Remote Sens.} {\bf 2020},
+ {\em 163},~202--213.
+https://doi.org/10.1016/j.isprsjprs.2020.03.010.
+
+\bibitem[Xia \em{et~al.}(2018)Xia, Yang, and Li]{XIA2018245}
+Xia, J.; Yang, C.; Li, Q.
+\newblock Building a spatiotemporal index for Earth Observation Big Data.
+\newblock {\em Int. J. Appl. Earth Obs. Geoinf.} {\bf 2018}, {\em 73},~245--252.
+https://doi.org/10.1016/j.jag.2018.04.012.
+
+\bibitem[Nativi \em{et~al.}(2015)Nativi, Mazzetti, Santoro, Papeschi, Craglia,
+ and Ochiai]{NATIVI20151}
+Nativi, S.; Mazzetti, P.; Santoro, M.; Papeschi, F.; Craglia, M.; Ochiai, O.
+\newblock Big Data challenges in building the Global Earth Observation System
+ of Systems.
+\newblock {\em Environ. Model. Softw.} {\bf 2015}, {\em
+ 68},~1--26.
+https://doi.org/10.1016/j.envsoft.2015.01.017.
+
+\bibitem[Wagemann \em{et~al.}(2021)Wagemann, Siemen, Seeger, and
+ Bendix]{WAGEMANN2021104916}
+Wagemann, J.; Siemen, S.; Seeger, B.; Bendix, J.
+\newblock Users of open Big Earth data---An analysis of the current state.
+\newblock {\em Comput. Geosci.} {\bf 2021}, {\em 157},~104916.
+https://doi.org/10.1016/j.cageo.2021.104916.
+
+\bibitem[Mori \em{et~al.}(2022)Mori, Mendicelli, Falcone, Acunzo, Spacagna,
+ Naso, and Moscatelli]{Mori}
+\textls[-25]{Mori, F.; Mendicelli, A.; Falcone, G.; Acunzo, G.; Spacagna, R.L.; Naso, G.;
+ Moscatelli, M.
+\newblock {Ground motion prediction maps using seismic-microzonation and
+ machine learning}.
+\newblock {\em Nat. Hazards Earth Syst. Sci.} {\bf 2022}, {\em
+ 22},~947--966.
+https://doi.org/10.5194/nhess-22-947-2022.}
+
+\bibitem[Lazar and Shellito(2005)]{1607434}
+Lazar, A.; Shellito, B.A.
+\newblock Comparing machine learning classification schemes---A GIS approach.
+\newblock In \hl{Proceedings} %MDPI: Please confirm added location and date for Proceedings.
+ of the Fourth International Conference on Machine
+ Learning and Applications (ICMLA'05), Los Angeles, CA, USA, 15--17 December 2005; p.~7. https://doi.org/10.1109/ICMLA.2005.16.
+
+\bibitem[Arabameri \em{et~al.}(2021)Arabameri, Pal, Rezaie, Nalivan, Chowdhuri,
+ Saha, Lee, and Moayedi]{ARABAMERI2021100848}
+Arabameri, A.; Pal, S.C.; Rezaie, F.; Nalivan, O.A.; Chowdhuri, I.; Saha, A.;
+ Lee, S.; Moayedi, H.
+\newblock Modeling groundwater potential using novel GIS-based machine-learning
+ ensemble techniques.
+\newblock {\em J. Hydrol. Reg. Stud.} {\bf 2021}, {\em
+ 36},~100848.
+https://doi.org/10.1016/j.ejrh.2021.100848.
+
+\bibitem[Zuo \em{et~al.}(2021)Zuo, Wang, and Yin]{ZUO2021105111}
+Zuo, R.; Wang, J.; Yin, B.
+\newblock Visualization and interpretation of geochemical exploration data
+ using GIS and machine learning methods.
+\newblock {\em Appl. Geochem.} {\bf 2021}, {\em 134},~105111.
+https://doi.org/10.1016/j.apgeochem.2021.105111.
+
+\bibitem[Sun \em{et~al.}(2019)Sun, Chen, Zhong, Liu, and Wang]{SUN201926}
+Sun, T.; Chen, F.; Zhong, L.; Liu, W.; Wang, Y.
+\newblock GIS-based mineral prospectivity mapping using machine learning
+ methods: A case study from Tongling ore district, eastern China.
+\newblock {\em Ore Geol. Rev.} {\bf 2019}, {\em 109},~26--49.
+https://doi.org/10.1016/j.oregeorev.2019.04.003.
+
+\bibitem[Buck \em{et~al.}(2022)Buck, Stäbler, Mohrmann, González, and
+ Greinert]{BUCK2022121}
+Buck, V.; Stäbler, F.; Mohrmann, J.; González, E.; Greinert, J.
+\newblock Visualising geospatial time series datasets in realtime with the
+ Digital Earth Viewer.
+\newblock {\em Comput. Graph.} {\bf 2022}, {\em 103},~121--128.
+https://doi.org/10.1016/j.cag.2022.01.010.
+
+\bibitem[Lemenkova(2021)]{Lemenkova202135}
+Lemenkova, P.
+\newblock {Mapping topographic, geophysical and gravimetry data of Pakistan –
+ a contribution to geological understanding of Sulaiman Fold Belt and Muslim
+ Bagh Ophiolite Complex}.
+\newblock {\em Geophysica} {\bf 2021}, {\em 56},~3--26.
+https://doi.org/10.5281/zenodo.5779189.
+
+\bibitem[Zhao(2004)]{1369823}
+Zhao, S.
+\newblock Remote sensing data fusion using support vector machine.
+\newblock In \hl{Proceedings} %MDPI: Please confirm added location and date for Proceedings.
+ of the IGARSS 2004---2004 IEEE International Geoscience
+ and Remote Sensing Symposium, Anchorage, AK, USA, 20--24 September 2004; Volume 4, pp. 2575--2578. https://doi.org/10.1109/IGARSS.2004.1369823.
+
+\bibitem[Zhu and Wu(2022)]{ZHU2022104166}
+Zhu, J.; Wu, P.
+\newblock BIM/GIS data integration from the perspective of information flow.
+\newblock {\em Autom. Constr.} {\bf 2022}, {\em 136},~104166.
+https://doi.org/10.1016/j.autcon.2022.104166.
+
+\bibitem[Kreklow \em{et~al.}(2019)Kreklow, Tetzlaff, Kuhnt, and
+ Burkhard]{data4030118}
+Kreklow, J.; Tetzlaff, B.; Kuhnt, G.; Burkhard, B.
+\newblock A Rainfall Data Intercomparison Dataset of RADKLIM, RADOLAN, and Rain
+ Gauge Data for Germany.
+\newblock {\em Data} {\bf 2019}, {\em 4}, 118.
+https://doi.org/10.3390/data4030118.
+
+\bibitem[Devoto \em{et~al.}(2021)Devoto, Hastewell, Prampolini, and
+ Furlani]{data6080081}
+Devoto, S.; Hastewell, L.J.; Prampolini, M.; Furlani, S.
+\newblock Dataset of Gravity-Induced Landforms and Sinkholes of the Northeast
+ Coast of Malta (Central Mediterranean Sea).
+\newblock {\em Data} {\bf 2021}, {\em 6}, 81.
+https://doi.org/10.3390/data6080081.
+
+\bibitem[{Demir Altıntaş} and Ilal(2021)]{DEMIRALTINTAS2021103743}
+{Demir Altıntaş}, Y.; Ilal, M.E.
+\newblock Loose coupling of GIS and BIM data models for automated compliance
+ checking against zoning codes.
+\newblock {\em Autom. Constr.} {\bf 2021}, {\em 128},~103743.
+https://doi.org/10.1016/j.autcon.2021.103743.
+
+\bibitem[Ma and Mei(2021)]{MA2021103858}
+Ma, Z.; Mei, G.
+\newblock Deep learning for geological hazards analysis: Data, models,
+ applications, and opportunities.
+\newblock {\em Earth-Sci. Rev.} {\bf 2021}, {\em 223},~103858.
+https://doi.org/10.1016/j.earscirev.2021.103858.
+
+\bibitem[Lemenkova(2022)]{Lemenkova202205}
+Lemenkova, P.
+\newblock {Seismicity in the Afar Depression and Great Rift Valley, Ethiopia}.
+\newblock {\em Environ. Res. Eng. Manag.} {\bf 2022},
+ {\em 78},~83--96.
+https://doi.org/10.5755/j01.erem.78.1.29963.
+
+\bibitem[Tamiminia \em{et~al.}(2020)Tamiminia, Salehi, Mahdianpari,
+ Quackenbush, Adeli, and Brisco]{TAMIMINIA2020152}
+Tamiminia, H.; Salehi, B.; Mahdianpari, M.; Quackenbush, L.; Adeli, S.; Brisco,
+ B.
+\newblock Google Earth Engine for geo-big data applications: A meta-analysis
+ and systematic review.
+\newblock {\em ISPRS J. Photogramm. Remote Sens.} {\bf 2020},
+ {\em 164},~152--170.
+https://doi.org/10.1016/j.isprsjprs.2020.04.001.
+
+\bibitem[Mercier \em{et~al.}(2021)Mercier, Betbeder, Denize, Roger, Spicher,
+ Lacoux, Roger, Baudry, and Hubert-Moy]{MERCIER2021107408}
+Mercier, A.; Betbeder, J.; Denize, J.; Roger, J.L.; Spicher, F.; Lacoux, J.;
+ Roger, D.; Baudry, J.; Hubert-Moy, L.
+\newblock Estimating crop parameters using Sentinel-1 and 2 datasets and
+ geospatial field data.
+\newblock {\em Data Brief} {\bf 2021}, {\em 38},~107408.
+https://doi.org/10.1016/j.dib.2021.107408.
+
+\bibitem[Balenzano \em{et~al.}(2021)Balenzano, Mattia, Satalino, Lovergine,
+ Palmisano, and Davidson]{BALENZANO2021107345}
+Balenzano, A.; Mattia, F.; Satalino, G.; Lovergine, F.P.; Palmisano, D.;
+ Davidson, M.W.
+\newblock Dataset of Sentinel-1 surface soil moisture time series at 1 km
+ resolution over Southern Italy.
+\newblock {\em Data Brief} {\bf 2021}, {\em 38},~107345.
+https://doi.org/10.1016/j.dib.2021.107345.
+
+\bibitem[Allenby(1987)]{ALLENBY1987137}
+\hl{Allenby, R.J.} %MDPI: Please check duplicated reference [27] and [47]. 
+Origin of the Bolivian Andean orocline: a geologic study utilizing Landsat and shuttle imaging radar. {\em Tectonophysics} {\bf 1987}, {\em 142},~137--154. https://doi.org/10.1016/0040-1951(87)90119-3.
+
+
+\bibitem[Lombardo and Gr\"utzner(2021)]{LOMBARDO}
+Lombardo, U.; Gr\"utzner, C.
+\newblock Tectonic geomorphology and active faults in the Bolivian Amazon.
+\newblock {\em Glob. Planet. Chang.} {\bf 2021}, {\em 203},~103544.
+https://doi.org/10.1016/j.gloplacha.2021.103544.
+
+\bibitem[{Samara e Silva Medeiros} \em{et~al.}(2019){Samara e Silva Medeiros},
+ Machado, Galvíncio, {de Moura}, and {de Araujo}]{SAMARA}
+{Samara e Silva Medeiros}, E.; Machado, C.C.C.; Galvíncio, J.D.; {de Moura},
+ M.S.B.; {de Araujo}, H.F.P.
+\newblock Data of plant diversity, spectral reflectance at specie level and
+ satellite spectral variables from the largest dry forest nucleus in South
+ America.
+\newblock {\em Data Brief} {\bf 2019}, {\em 25},~104335.
+https://doi.org/10.1016/j.dib.2019.104335.
+
+\bibitem[Talib \em{et~al.}(2022)Talib, Shimon, Sarah, and
+ Tonian]{TALIB2022112793}
+Talib, O.C.; Shimon, W.; Sarah, K.; Tonian, R.
+\newblock Detection of sinkhole activity in West-Central Florida using InSAR
+ time series observations.
+\newblock {\em Remote Sens. Environ.} {\bf 2022}, {\em 269},~112793.
+https://doi.org/10.1016/j.rse.2021.112793.
+
+\bibitem[Li \em{et~al.}(2022)Li, Xu, and Li]{LI2022114}
+Li, S.; Xu, W.; Li, Z.
+\newblock Review of the SBAS InSAR Time-series algorithms, applications, and
+ challenges.
+\newblock {\em Geod. Geodyn.} {\bf 2022}, {\em 13},~114--126. https://doi.org/10.1016/j.geog.2021.09.007. \hl{Advances in InSAR algorithms, deformation monitoring and source parameter inversion.} %MDPI: Please confirm that this could be removed.
+
+\bibitem[Neugirg \em{et~al.}(2016)Neugirg, Kaiser, Huber, Heckmann,
+ Schindewolf, Schmidt, Becht, and Haas]{NEUGIRG2016269}
+Neugirg, F.; Kaiser, A.; Huber, A.; Heckmann, T.; Schindewolf, M.; Schmidt, J.;
+ Becht, M.; Haas, F.
+\newblock Using terrestrial LiDAR data to analyse morphodynamics on steep
+ unvegetated slopes driven by different geomorphic processes.
+\newblock {\em CATENA} {\bf 2016}, {\em 142},~269--280.
+https://doi.org/10.1016/j.catena.2016.03.021.
+
+\bibitem[Nakao \em{et~al.}(2022)Nakao, Kabeya, Awaya, Yamasaki, Tsuyama,
+ Yamagawa, Miyamoto, and Araki]{NAKAO2022119953}
+Nakao, K.; Kabeya, D.; Awaya, Y.; Yamasaki, S.; Tsuyama, I.; Yamagawa, H.;
+ Miyamoto, K.; Araki, M.G.
+\newblock Assessing the regional-scale distribution of height growth of
+ Cryptomeria japonica stands using airborne LiDAR, forest GIS database and
+ machine learning.
+\newblock {\em For. Ecol. Manag.} {\bf 2022}, {\em 506},~119953.
+https://doi.org/10.1016/j.foreco.2021.119953.
+
+\bibitem[Szabó \em{et~al.}(2019)Szabó, Deák, Kovács, Ádám Kertész, and
+ Bertalan-Balázs]{SZABO2019104187}
+Szabó, S.; Deák, B.; Kovács, Z.; Ádám Kertész.; Bertalan-Balázs, B.
+\newblock Dataset for landscape pattern analysis from a climatic perspective.
+\newblock {\em Data Brief} {\bf 2019}, {\em 25},~104187.
+https://doi.org/10.1016/j.dib.2019.104187.
+
+\bibitem[Rujoiu-Mare and Mihai(2016)]{RUJOIUMARE2016244}
+Rujoiu-Mare, M.R.; Mihai, B.A.
+\newblock Mapping Land Cover Using Remote Sensing Data and GIS Techniques: A
+ Case Study of Prahova Subcarpathians.
+\newblock {\em Procedia Environ. Sci.} {\bf 2016}, {\em 32},~244--255. https://doi.org/10.1016/j.proenv.2016.03.029. \hl{ECOSMART---Environment at Crossroads: Smart Approaches for a Sustainable Development.} %MDPI: Please confirm that this could be removed.
+
+\bibitem[Li \em{et~al.}(2021)Li, Xian, Zhou, and Pengra]{LI2021112670}
+\textls[-20]{Li, C.; Xian, G.; Zhou, Q.; Pengra, B.W. A novel automatic phenology learning (APL) method of training sample selection using multiple datasets for time-series land cover mapping. {\em Remote Sens. Environ.} {\bf 2021}, {\em 266},~112670. https://doi.org/10.1016/j.rse.2021.112670.}
+
+\bibitem[Kral \em{et~al.}(2021)Kral, Sönmez, and Reimer]{KRAL2021107382}
+Kral, U.; Sönmez, E.C.; Reimer, F.
+\newblock Data description of “City boundary and urban district boundaries,
+ Vienna, 1920”.
+\newblock {\em Data Brief} {\bf 2021}, {\em 38},~107382.
+https://doi.org/10.1016/j.dib.2021.107382.
+
+\bibitem[Ostafin \em{et~al.}(2022)Ostafin, Jasionek, Kaim, and
+ Miklar]{OSTAFIN2022107709}
+Ostafin, K.; Jasionek, M.; Kaim, D.; Miklar, A.
+\newblock Historical dataset of mills for Galicia in the Austro-Hungarian
+ Empire/southern Poland from 1880 to the 1930s.
+\newblock {\em Data Brief} {\bf 2022}, {\em 40},~107709.
+https://doi.org/10.1016/j.dib.2021.107709.
+
+\bibitem[BRATU(2019)]{8937640}
+Bratu, I.A.
+\newblock Digitizing maps procedure for scientific forestry administration by
+ GIS database. Case study: Rasinari forestry administration.
+\newblock In \hl{Proceedings} %Please confirm added location and date for Proceedings.
+ of the 2019 International Conference on ENERGY and
+ ENVIRONMENT (CIEM), Timisoara, Romania, 17--18 October 2019; pp. 95--98.
+https://doi.org/10.1109/CIEM46456.2019.8937640.
+
+\bibitem[Waqar \em{et~al.}(2013)Waqar, Rehman, and Ikram]{6723417}
+Waqar, M.M.; Rehman, F.; Ikram, M.
+\newblock Land suitability assessment for rice crop using geospatial
+ techniques.
+\newblock In \hl{Proceedings} %MDPI: Please confirm added location and date for Proceedings.
+ of the 2013 IEEE International Geoscience and Remote
+ Sensing Symposium---IGARSS, Melbourne, Australia, 21--26 July 2013; pp.~2844--2847.
+https://doi.org/10.1109/IGARSS.2013.6723417.
+
+\bibitem[Gavette and Page-Schmit(2018)]{8810063}
+\textls[-25]{Gavette, P.; Page-Schmit, K.
+\newblock Utilizing Historic Cartography in 3D for Archaeological Prospection
+ on Alcatraz. In \hl{Proceedings} %Please confirm added location and date for Proceedings.
+ of the 2018 3rd Digital Heritage International
+ Congress (DigitalHERITAGE) Held Jointly with 2018 24th International
+ Conference on Virtual Systems Multimedia (VSMM 2018), San Francisco, CA, USA, 26--30 October 2018; pp. 1--4.
+https://doi.org/10.1109/DigitalHeritage.2018.8810063.}
+
+\bibitem[Li \em{et~al.}(2012)Li, Zhou, and Li]{LI20121331}
+Li, S.S.; Zhou, W.; Li, A.B.
+\newblock Image Watermark Similarity Calculation of GIS Vector Data.
+\newblock {\em Procedia Eng.} {\bf 2012}, {\em 29},~1331--1337. https://doi.org/10.1016/j.proeng.2012.01.136. \hl{2012 International Workshop on Information and Electronics Engineering.} %MDPI: Please confirm that this could be removed.
+
+\bibitem[Koch and Heipke(2006)]{KOCH200623}
+Koch, A.; Heipke, C.
+\newblock Semantically correct 2.5D GIS data---The integration of a DTM and
+ topographic vector data.
+\newblock {\em ISPRS J. Photogramm. Remote Sens.} {\bf 2006},
+ {\em 61},~23--32.
+https://doi.org/10.1016/j.isprsjprs.2006.07.005.
+
+\bibitem[Li \em{et~al.}(2012)Li, Li, and Lv]{LI20121344}
+Li, A.B.; Li, S.S.; Lv, G.N.
+\newblock Disguise and Reduction Methods of GIS Vector Data Based on Difference
+ Expansion Principle.
+\newblock {\em Procedia Eng.} {\bf 2012}, {\em 29},~1344--1350. https://doi.org/10.1016/j.proeng.2012.01.138. \hl{2012 International Workshop on Information and Electronics Engineering.} %MDPI: Please confirm that this could be removed.
+
+\bibitem[Viana-Fons \em{et~al.}(2020)Viana-Fons, Gonzálvez-Maciá, and
+ Payá]{VIANAFONS2020110258}
+\textls[-20]{Viana-Fons, J.; Gonzálvez-Maciá, J.; Payá, J.
+\newblock Development and validation in a 2D-GIS environment of a 3D shadow
+ cast vector-based model on arbitrarily orientated and tilted surfaces.
+\newblock {\em Energy Build.} {\bf 2020}, {\em 224},~110258.
+https://doi.org/10.1016/j.enbuild.2020.110258.}
+
+\bibitem[Güler \em{et~al.}(2021)Güler, Beyhan, and Tağa]{GULER2021107755}
+Güler, C.; Beyhan, B.; Tağa, H.
+\newblock PolyMorph-2D: An open-source GIS plug-in for morphometric analysis of
+ vector-based 2D polygon features.
+\newblock {\em Geomorphology} {\bf 2021}, {\em 386},~107755.
+https://doi.org/10.1016/j.geomorph.2021.107755.
+
+\bibitem[Allenby(1987)]{Allenby1987}
+\hl{Allenby, R.J.}%MDPI: Please check duplicated reference [27] and [47].
+ Origin of the Bolivian Andean orocline: a geologic study utilizing Landsat and shuttle imaging radar. {\em Tectonophysics} {\bf 1987}, {\em 142},~137--154. https://doi.org/10.1016/0040-1951(87)90119-3.
+
+
+\bibitem[Lindh and Lemenkova(2021)]{Lindh2021}
+Lindh, P.; Lemenkova, P.
+\newblock {Evaluation of Different Binder Combinations of Cement, Slag and CKD
+ for S/S Treatment of TBT Contaminated Sediments}.
+\newblock {\em Acta Mech. Autom.} {\bf 2021}, {\em 15},~236--248.
+https://doi.org/10.2478/ama-2021-0030.
+
+\bibitem[Lemenkova(2021)]{Lemenkova202127}
+Lemenkova, P.
+\newblock {Submarine tectonic geomorphology of the Pliny and Hellenic Trenches
+ reflecting geologic evolution of the southern Greece}.
+\newblock {\em Rud. Geol. Naft. Zb.} {\bf 2021}, {\em 36},~33--48.
+https://doi.org/10.17794/rgn.2021.4.4.
+
+\bibitem[Li \em{et~al.}(2020)Li, Chen, and Hu]{Lietal}
+Li, K.; Chen, S.; Hu, G.
+\newblock {Seismic labeled data expansion using variational autoencoders}.
+\newblock {\em Artif. Intell. Geosci.} {\bf 2020}, {\em
+ 1},~24--30.
+https://doi.org/10.1016/j.aiig.2020.12.002.
+
+\bibitem[Lemenkov(2021)]{Lemenkov2021a}
+Lemenkov, V.;~Lemenkova, P.
+\newblock {Using TeX Markup Language for 3D and 2D Geological Plotting}.
+\newblock {\em Found. Comput. Decis. Sci.} {\bf 2021}, {\em
+ 46},~43--69.
+https://doi.org/10.2478/fcds-2021-0004.
+
+\bibitem[Zhou \em{et~al.}(2020)Zhou, Cai, Zong, Yao, Yu, and Hu]{Zhou}
+Zhou, R.; Cai, Y.; Zong, J.; Yao, X.; Yu, F.; Hu, G.
+\newblock {Automatic fault instance segmentation based on mask propagation
+ neural network}.
+\newblock {\em Artif. Intell. Geosci.} {\bf 2020}, {\em
+ 1},~31--35.
+https://doi.org/10.1016/j.aiig.2020.12.001.
+
+\bibitem[Lemenkov(2021)]{Lemenkov2021b}
+Lemenkov, V.;~Lemenkova, P.
+\newblock {Measuring Equivalent Cohesion Ceq of the Frozen Soils by Compression
+ Strength Using Kriolab Equipment}.
+\newblock {\em Civ. Environ. Eng. Rep.} {\bf 2021}, {\em
+ 31},~63--84.
+https://doi.org/10.2478/ceer-2021-0020.
+
+\bibitem[Schenke(2016)]{Schenke2016}
+Schenke, H. {General Bathymetric Chart of the Oceans (GEBCO)}.
+\newblock In {\em {Encyclopedia of Marine Geosciences}}, 1st ed.; \hl{Encyclopedia
+ of Earth Sciences}%MDPI: Please confirm that this could be removed.
+; Springer: Dordrecht, The Netherlands, 2016; pp. 268--269.
+https://doi.org/10.1007/978-94-007-6238-1\_63.
+
+\bibitem[Lemenkova(2020)]{Lemenkova2020b}
+Lemenkova, P.
+\newblock {GEBCO Gridded Bathymetric Datasets for Mapping Japan Trench
+ Geomorphology by Means of GMT Scripting Toolset}.
+\newblock {\em Geod. Cartogr.} {\bf 2020}, {\em 46},~98--112.
+https://doi.org/10.3846/gac.2020.11524.
+
+\bibitem[Pavlis \em{et~al.}(2012)Pavlis, Holmes, Kenyon, and Factor]{Pavlis}
+Pavlis, N.K.; Holmes, S.; Kenyon, S.C.; Factor, J.K.
+\newblock {The development and evaluation of the Earth Gravitational Model 2008
+ (EGM2008)}.
+\newblock {\em J. Geophys. Res.} {\bf 2012}, {\em 117},~B04406.
+https://doi.org/10.1029/2011JB008916.
+
+\bibitem[Sandwell \em{et~al.}(2014)Sandwell, Müller, Smith, Garcia, and
+ Francis]{Sandwelletal2014}
+Sandwell, D.T.; Müller, R.D.; Smith, W.H.F.; Garcia, E.; Francis, R.
+\newblock {New global marine gravity model from CryoSat-2 and Jason-1 reveals
+ buried tectonic structure}.
+\newblock {\em Science} {\bf 2014}, {\em 7346},~65--67.
+https://doi.org/10.1126/science.1258213.
+
+\bibitem[Hubbard and Crowley(2005)]{Hubbard}
+Hubbard, B.E.; Crowley, J.K.
+\newblock {Mineral mapping on the Chilean–Bolivian Altiplano using co-orbital
+ ALI, ASTER and Hyperion imagery: Data dimensionality issues and solutions}.
+\newblock {\em Remote Sens. Environ.} {\bf 2005}, {\em 99},~173--186.
+https://doi.org/10.1016/j.rse.2005.04.027.
+
+\bibitem[Suetova \em{et~al.}(2005)Suetova, Ushakova, and Lemenkova]{Suetova}
+Suetova, I.A.; Ushakova, L.A.; Lemenkova, P.
+\newblock {Geoinformation mapping of the Barents and Pechora Seas}.
+\newblock {\em Geogr. Nat. Resour.} {\bf 2005}, {\em 4},~138--142.
+https://doi.org/10.6084/m9.figshare.7435535.
+
+\bibitem[Lemenkova(2021)]{Lemenkova202125}
+Lemenkova, P.
+\newblock {Dataset compilation by GRASS GIS for thematic mapping of Antarctica:
+ Topographic surface, ice thickness, subglacial bed elevation and sediment
+ thickness}.
+\newblock {\em Czech Polar Rep.} {\bf 2021}, {\em 11},~67--85.
+https://doi.org/10.5817/CPR2021-1-6.
+
+\bibitem[Klau\v{c}o \em{et~al.}(2013)Klau\v{c}o, Gregorov\'{a}, Stankov,
+ Markovi\'{c}, and Lemenkova]{Klauco2013}
+\textls[-20]{Klau\v{c}o, M.; Gregorov\'{a}, B.; Stankov, U.; Markovi\'{c}, V.; Lemenkova, P.
+\newblock {Determination of ecological significance based on geostatistical
+ assessment: A case study from the Slovak Natura 2000 protected area}.
+\newblock {\em Open Geosci.} {\bf 2013}, {\em 5},~28--42.
+https://doi.org/10.2478/s13533-012-0120-0.}
+
+\bibitem[Klauco \em{et~al.}(2017)Klauco, Gregorov\'{a}, Koleda, Stankov,
+ Markovic, and Lemenkova]{Klauco2017}
+Klauco, M.; Gregorov\'{a}, B.; Koleda, P.; Stankov, U.; Markovic, V.;
+ Lemenkova, P.
+\newblock {Land Planning as a Support for Sustainable Development Based on
+ Tourism: A Case Study of Slovak Rural Region}.
+\newblock {\em Environ. Eng. Manag. J.} {\bf 2017},
+ {\em 16},~449--458.
+https://doi.org/10.30638/eemj.2017.045.
+
+\bibitem[Association(2021)]{QGIS}
+Association, Q. QGIS Geographic Information System. 2021. \hl{Available online: (accessed on)} %MDPI: Please confirm web type reference, please confirm author name.
+.
+
+\bibitem[Wessel \em{et~al.}(2019)Wessel, Luis, Uieda, Scharroo, Wobbe, Smith,
+ and Tian]{Wesseletal2019}
+Wessel, P.; Luis, J.F.; Uieda, L.; Scharroo, R.; Wobbe, F.; Smith, W.H.F.;
+ Tian, D.
+\newblock {The Generic Mapping Tools version 6}.
+\newblock {\em Geochem. Geophys. Geosystems} {\bf 2019}, {\em
+ 20},~5556--5564.
+https://doi.org/10.1029/2019GC008515.
+
+\bibitem[Gauger \em{et~al.}(2007)Gauger, Kuhn, Gohl, Feigl, Lemenkova, and
+ Hillenbrand]{Gauger}
+Gauger, S.; Kuhn, G.; Gohl, K.; Feigl, T.; Lemenkova, P.; Hillenbrand, C.
+\newblock {Swath-bathymetric mapping}.
+\newblock {\em Rep. Polar Mar. Res.} {\bf 2007}, {\em
+ 557},~38--45.
+https://doi.org/10.6084/m9.figshare.7439231.
+
+\bibitem[Lemenkova(2020)]{Lemenkova2020a}
+Lemenkova, P.
+\newblock {Variations in the bathymetry and bottom morphology of the Izu-Bonin
+ Trench modelled by GMT}.
+\newblock {\em Bull. Geogr. Phys. Geogr. Ser.} {\bf 2020},
+ {\em 18},~41--60.
+https://doi.org/10.2478/bgeo-2020-0004.
+
+\bibitem[Lemenkova(2021)]{Lemenkova202140}
+Lemenkova, P.
+\newblock {Geophysical Mapping of Ghana Using Advanced Cartographic Tool GMT}.
+\newblock {\em Kartogr. Geoinf.} {\bf 2021}, {\em 20},~16--37.
+https://doi.org/10.32909/kg.20.36.2.
+
+\bibitem[Falcone \em{et~al.}(2021)Falcone, Acunzo, Mendicelli, Mori, Naso,
+ Peronace, Porchia, Romagnoli, Tarquini, and Moscatelli]{Falcone}
+Falcone, G.; Acunzo, G.; Mendicelli, A.; Mori, F.; Naso, G.; Peronace, E.;
+ Porchia, A.; Romagnoli, G.; Tarquini, E.; Moscatelli, M.
+\newblock {Seismic amplification maps of Italy based on site-specific
+ microzonation dataset and one-dimensional numerical approach}.
+\newblock {\em Eng. Geol.} {\bf 2021}, {\em 289},~106170.
+https://doi.org/10.1016/j.enggeo.2021.106170.
+
+\bibitem[Chang \em{et~al.}(2022)Chang, Deng, H., Y., and G.]{Chang}
+Jiang, C.; Yahong, D.; Huangdong, M.; You, X.; Ge, C. {A microtremor study to reveal the dynamic response of earth fissure site: the case study in Fenwei Basins, China}.
+\newblock {\em Environ. Earth Sci.} {\bf 2022}, {\em 81}, 80.
+https://doi.org/10.1007/s12665-022-10217-y.
+
+\bibitem[Fayjaloun \em{et~al.}(2021)Fayjaloun, Negulescu, Roullé, Auclair,
+ Gehl, and Faravelli]{Fayjaloun}
+Fayjaloun, R.; Negulescu, C.; Roullé, A.; Auclair, S.; Gehl, P.; Faravelli, M.
+\newblock {Sensitivity of Earthquake Damage Estimation to the Input Data (Soil
+ Characterization Maps and Building Exposure): Case Study in the Luchon
+ Valley, France}.
+\newblock {\em Geosciences} {\bf 2021}, {\em 11},~249.
+https://doi.org/10.3390/geosciences11060249.
+
+\bibitem[Anderson \em{et~al.}(2021)Anderson, Long, Horton, Calle, and
+ Soignard]{Andersonetal}
+Anderson, R.B.; Long, S.P.; Horton, B.K.; Calle, A.Z.; Soignard, E.
+\newblock {Late Paleozoic Gondwanide deformation in the Central Andes: Insights
+ from RSCM thermometry and thermal modeling, southern Bolivia}.
+\newblock {\em Gondwana Res.} {\bf 2021}, {\em 94},~222--242.
+https://doi.org/10.1016/j.gr.2021.03.002.
+
+\bibitem[Arguedas(2002)]{Arguedas}
+Arguedas, J.D.
+\newblock {\em Alcide d'Orbigny: Estudios Sobre la Geología de Bolivia. El
+ Naturalista Francés Alcide Dessaline d'Orbigny en la Visión de los
+ Bolivianos}; Institut Français d'\'Etudes Andines: Lima, Peru, 2002; pp. 195--210.
+https://doi.org/10.4000/books.ifea.3878.
+
+\bibitem[Forbes(1861)]{Forbes}
+\textls[-30]{Forbes, D. On the Geology of Bolivia and Southern Peru. {\em Q. J. Geol. Soc.} {\bf 1861}, {\em 17},~7--62. https://doi.org/10.1144/GSL.JGS.1861.017.01-02.08.}
+
+\bibitem[Suárez~Soruco(2000)]{Suarez}
+Suárez~Soruco, R. \emph{Compendio de Geología de Bolivia}; Revista Técnica de Yacimientos Petrolíferos Fiscales Bolivianos: Cochabamba, Bolivia, 2000; Volume 18. \hl{no. 1-2. ll, maps; 28 cm, 4 folded maps.} %MDPI: Please confirm that this could be removed.
+
+\bibitem[Ahfeld and Branisa(1960)]{Ahfeld}
+Ahfeld, F.; Branisa, L.
+\newblock {\em Geologia de Bolivia}; Instituto Boliviano del Petroleo,
+ Editorial Don Bosco: La Paz, Bolivia, 1960.
+
+\bibitem[Allenby(1988)]{Allenby1988}
+Allenby, R.J.
+\newblock {Origin of rectangular and aligned lakes in the Beni Basin of
+ Bolivia}.
+\newblock {\em Tectonophysics} {\bf 1988}, {\em 145},~1--20.
+https://doi.org/10.1016/0040-1951(88)90311-3.
+
+\bibitem[Ramos(2021)]{Ramos}
+Ramos, V.A.
+\newblock {Fifty years of plate tectonics in the Central Andes}.
+\newblock {\em J. South Am. Earth Sci.} {\bf 2021}, {\em
+ 105},~102997.
+https://doi.org/10.1016/ j.jsames.2020.102997.
+
+\bibitem[Fernandez \em{et~al.}(2019)Fernandez, Assumpção, Nieto, Griffiths,
+ and Convers]{Fernandez}
+Fernandez, G.A.; Assumpção, M.; Nieto, M.; Griffiths, T.; Convers, J.
+\newblock {Focal mechanism of the 5.1Mw 2014 Lloja earthquake, Bolivia: Probing
+ the transition between extensional stresses of the central Altiplano and
+ compressional stresses of the sub-Andes}.
+\newblock {\em J. S. Am. Earth Sci.} {\bf 2019}, {\em
+ 91},~102--107.
+https://doi.org/10.1016/j.jsames.2019.01.001.
+
+\bibitem[Funning \em{et~al.}(2005)Funning, Barke, Lamb, Minaya, Parsons, and
+ Wright]{Funning}
+Funning, G.J.; Barke, R.M.D.; Lamb, S.H.; Minaya, E.; Parsons, B.; Wright, T.J.
+\newblock {The 1998 Aiquile, Bolivia earthquake: A seismically active fault
+ revealed with InSAR}.
+\newblock {\em Earth Planet. Sci. Lett.} {\bf 2005}, {\em
+ 232},~39--49.
+https://doi.org/10.1016/j.epsl.2005.01.013.
+
+\bibitem[Lima \em{et~al.}(2021{\natexlab{a}})Lima, Muñoz, Ramos~Ramos,
+ Aguirre, Maity, Ahmad, and Bhattacharya]{Lima2021a}
+Lima, I.Q.; Muñoz, M.O.; Ramos~Ramos, O.E.; Aguirre, J.Q.; Maity, J.P.; Ahmad,
+ A.; Bhattacharya, P.
+\newblock {Hydrogeochemical contrasts in the shallow aquifer systems of the
+ Lower Katari Basin and Southern Poopó Basin, Bolivian Altiplano}.
+\newblock {\em J. S. Am. Earth Sci.} {\bf 2021}, {\em
+ 105},~102914.
+https://doi.org/10.1016/j.jsames.2020.102914.
+
+\bibitem[Lima \em{et~al.}(2021{\natexlab{b}})Lima, Ramos~Ramos, Muñoz,
+ Chambi~Tapia, Aguirre, Ahmad, Maity, Islam, and
+ Prosun~Bhattacharya]{Lima2021b}
+Lima, I.Q.; Ramos~Ramos, O.E.; Muñoz, M.O.; Chambi~Tapia, M.I.; Aguirre, J.Q.;
+ Ahmad, A.; Maity, J.P.; Islam, M.; Prosun~Bhattacharya, T.
+\newblock {Geochemical mechanisms of natural arsenic mobility in the
+ hydrogeologic system of Lower Katari Basin, Bolivian Altiplano}.
+\newblock {\em J. Hydrol.} {\bf 2021}, {\em 594}, 125778.
+https://doi.org/10.1016/j.jhydrol.2020.125778.
+
+\bibitem[Avil\'{e}s \em{et~al.}(2020)Avil\'{e}s, Descloitres, Duwig, Rossier,
+ Spadini, Legchenko, Soruco, Argollo, P\'{e}rez, and Medinaceli]{Aviles}
+Avil\'{e}s, G.P.F.; Descloitres, M.; Duwig, C.; Rossier, Y.; Spadini, L.;
+ Legchenko, A.; Soruco, A.; Argollo, J.; P\'{e}rez, M.; Medinaceli, W.
+\newblock {Insight into the Katari-Lago Menor Basin aquifer, Lake
+ Titicaca-Bolivia, inferred from geophysical (TDEM), hydrogeological and
+ geochemical data}.
+\newblock {\em J. S. Am. Earth Sci.} {\bf 2020}, {\em 99}, 102479.
+https://doi.org/10.1016/j.jsames.2019.102479.
+
+\bibitem[Borsa \em{et~al.}(2008)Borsa, Fricker, Bills, Minster, Carabajal, and
+ Quinn]{Borsa}
+Borsa, A.A.; Fricker, H.A.; Bills, B.G.; Minster, J.B.; Carabajal, C.C.; Quinn,
+ K.J.
+\newblock {Topography of the salar de Uyuni, Bolivia from kinematic GPS}.
+\newblock {\em Geophys. J. Int.} {\bf 2008}, {\em
+ 172},~31--40.
+https://doi.org/10.1111/j.1365-246X.2007.03604.
+
+\bibitem[Dorbath and Granet(1996)]{Dorbath}
+Dorbath, C.; Granet, M.
+\newblock {Local earthquake tomography of the Altiplano and the Eastern
+ Cordillera of northern Bolivia}.
+\newblock {\em Tectonophysics} {\bf 1996}, {\em 259},~117--136.
+https://doi.org/10.1016/0040-1951(95)00052-6.
+
+\bibitem[Dahm and Krüger(1999)]{Dahm}
+\textls[-30]{Dahm, T.; Krüger, F.
+\newblock {Higher-degree moment tensor inversion using far-field broad-band
+ recordings: theory and evaluation of the method with application to the 1994
+ Bolivia deep earthquake}.
+\newblock {\em Geophys. J. Int.} {\bf 1999}, {\em
+ 137},~35--50.
+https://doi.org/10.1046/j.1365-246x.1999.00761.x.}
+
+\bibitem[Boger \em{et~al.}(2005)Boger, Raetz, Giles, Etchart, and
+ Fanning]{Boger}
+Boger, S.D.; Raetz, M.; Giles, D.; Etchart, E.; Fanning, C.M.
+\newblock {U-Pb age from the Sunsás region of Eastern Bolivia, evidence for
+ allochthonous origin of the Paraguá Block}.
+\newblock {\em Precambrian Res.} {\bf 2005}, {\em 139},~121--146.
+https://doi.org/10.1016/j.precamres.2005.05.010.
+
+\bibitem[Redwood and Rice(1997)]{Redwood}
+Redwood, S.D.; Rice, C.M.
+\newblock {Petrogenesis of Miocene basic shoshonitic lavas in the Bolivian
+ Andes and implications for hydrothermal gold, silver and tin deposits}.
+\newblock {\em J. S. Am. Earth Sci.} {\bf 1997}, {\em
+ 10},~203--221.
+https://doi.org/10.1016/S0895-9811(97)00024-2.
+
+\bibitem[Iqbal(1986)]{Iqbal}
+Iqbal, B.A.
+\newblock {The economics of tin mining in Bolivia: by M. A. Ayub World Bank,
+ Washington, DC, 1985}.
+\newblock {\em Resour. Policy} {\bf 1986}, {\em 12},~153--154.
+https://doi.org/10.1016/0301-4207(86)90023-1.
+
+\bibitem[Diaz-Cuellar(2017)]{DiazCuellar}
+Diaz-Cuellar, V.
+\newblock {The political economy of mining in Bolivia during the government of
+ the Movement Towards Socialism (2006–2015)}.
+\newblock {\em Extr. Ind. Soc.} {\bf 2017}, {\em
+ 4},~120--130.
+https://doi.org/10.1016/j.exis.2016.12.011.
+
+\bibitem[Guédron \em{et~al.}(2021)Guédron, Tolu, Delaere, Sabatier, Barre,
+ Heredia, Brisset, Campillo, Bindler, Fritz, Baker, and Amouroux]{Guedron}
+Guédron, S.; Tolu, J.; Delaere, C.; Sabatier, P.; Barre, J.; Heredia, C.;
+ Brisset, E.; Campillo, S.; Bindler, R.; Fritz, S.C.; et~al.
+\newblock {Reconstructing two millennia of copper and silver metallurgy in the
+ Lake Titicaca region (Bolivia/Peru) using trace metals and lead isotopic
+ composition}.
+\newblock {\em Anthropocene} {\bf 2021}, {\em 34},~100288.
+https://doi.org/10.1016/j.ancene.2021.100288.
+
+\bibitem[Pavilonis \em{et~al.}(2017)Pavilonis, Grassman, Johnson, Diaz, and
+ Caravanos]{Pavilonis}
+Pavilonis, B.; Grassman, J.; Johnson, G.; Diaz, Y.; Caravanos, J.
+\newblock {Characterization and risk of exposure to elements from artisanal
+ gold mining operations in the Bolivian Andes}.
+\newblock {\em Environ. Res.} {\bf 2017}, {\em 154},~1--9.
+https://doi.org/10.1016/j.envres.2016.12.010.
+
+\bibitem[Narins(2017)]{Narins}
+Narins, T.P.
+\newblock {The battery business: Lithium availability and the growth of the
+ global electric car industry}.
+\newblock {\em Extr. Ind. Soc.} {\bf 2017}, {\em
+ 4},~321--328.
+https://doi.org/10.1016/j.exis.2017.01.013.
+
+\bibitem[Sanchez-Lopez(2021)]{Sanchez}
+Sanchez-Lopez, M.D.
+\newblock {Territory and lithium extraction: The Great Land of Lipez and the
+ Uyuni Salt Flat in Bolivia}.
+\newblock {\em Political Geogr.} {\bf 2021}, {\em 90},~102456.
+https://doi.org/10.1016/j.polgeo.2021.102456.
+
+\bibitem[Plotzki \em{et~al.}(2015)Plotzki, May, Preusser, Roesti, Denier,
+ Lombardo, and Veit]{Plotzki}
+Plotzki, A.; May, J.H.; Preusser, F.; Roesti, B.; Denier, S.; Lombardo, U.;
+ Veit, H.
+\newblock {Geomorphology and evolution of the late Pleistocene to Holocene
+ fluvial system in the south-eastern Llanos de Moxos, Bolivian Amazon}.
+\newblock {\em CATENA} {\bf 2015}, {\em 127},~102--115.
+https://doi.org/10.1016/j.catena.2014.12.019.
+
+\bibitem[Baumann \em{et~al.}(2018)Baumann, Levers, Macchi, Bluhm, Waske,
+ Gasparri, and Kuemmerle]{Baumannetal2018}
+Baumann, M.; Levers, C.; Macchi, L.; Bluhm, H.; Waske, B.; Gasparri, N.I.;
+ Kuemmerle, T.
+\newblock {Mapping continuous fields of tree and shrub cover across the Gran
+ Chaco using Landsat 8 and Sentinel-1 data}.
+\newblock {\em Remote Sens. Environ.} {\bf 2018}, {\em 216},~201--211.
+https://doi.org/10.1016/j.rse.2018.06.044.
+
+\bibitem[Thomas \em{et~al.}(2011)Thomas, Semo, Morales, Noza, Nuñez, Cayuba,
+ Noza, Humaday, Vaya, and Van~Damme]{Thomasetal}
+Thomas, E.; Semo, L.; Morales, M.; Noza, Z.; Nuñez, H.; Cayuba, A.; Noza, M.;
+ Humaday, N.; Vaya, J.; Van~Damme, P.
+\newblock {Ethnomedicinal practices and medicinal plant knowledge of the
+ Yuracarés and Trinitarios from Indigenous Territory and National Park
+ Isiboro-Sécure, Bolivian Amazon}.
+\newblock {\em J. Ethnopharmacol.} {\bf 2011}, {\em 133},~153--163.
+https://doi.org/10.1016/j.jep.2010.09.017.
+
+\bibitem[Burbridge \em{et~al.}(2004)Burbridge, Mayle, and Killeen]{Burbridge}
+Burbridge, R.E.; Mayle, F.E.; Killeen, T.J.
+\newblock {Fifty-thousand-year vegetation and climate history of Noel Kempff
+ Mercado National Park, Bolivian Amazon}.
+\newblock {\em Quat. Res.} {\bf 2004}, {\em 61},~215--230.
+https://doi.org/10.1016/j.yqres.2003.12.004.
+
+\bibitem[Cadima \em{et~al.}(2014)Cadima, Van~Zonneveld, Scheldeman, Castañeda,
+ Patiño, Beltran, and Van~Damme]{Cadima}
+Cadima, X.; Van~Zonneveld, M.; Scheldeman, X.; Castañeda, N.; Patiño, F.;
+ Beltran, M.; Van~Damme, P.
+\newblock {Endemic wild potato (\emph{Solanum} spp.) biodiversity status in Bolivia:
+ Reasons for conservation concerns}.
+\newblock {\em J. Nat. Conserv.} {\bf 2014}, {\em 22},~113--131.
+https://doi.org/10.1016/j.jnc.2013.09.007.
+
+\bibitem[Capriles and Albarracin-Jordan(2013)]{Capriles}
+Capriles, J.M.; Albarracin-Jordan, J.
+\newblock {The earliest human occupations in Bolivia: A review of the
+ archaeological evidence}.
+\newblock {\em Quat. Int.} {\bf 2013}, {\em 301},~46--59.
+https://doi.org/10.1016/j.quaint.2012.06.012.
+
+\bibitem[Rivadeneyra-Vera \em{et~al.}(2016)Rivadeneyra-Vera, Assumpção,
+ Minaya, Aliaga, and Avila]{Rivadeneyra}
+Rivadeneyra-Vera, C.; Assumpção, M.; Minaya, E.; Aliaga, P.; Avila, G.
+\newblock {Determination of the fault plane and rupture size of the 2013 Santa
+ Cruz earthquake, Bolivia, 5.2 Mw, by relative location of the aftershocks}.
+\newblock {\em J. S. Am. Earth Sci.} {\bf 2016}, {\em
+ 71},~54--62.
+https://doi.org/10.1016/j.jsames.2016.06.002.
+
+\bibitem[Tono and Yomogida(1997)]{Tono}
+Tono, Y.; Yomogida, K.
+\newblock {Origin of short-period signals following P-diffracted waves: A case
+ study of the 1994 Bolivian deep earthquake}.
+\newblock {\em Phys. Earth Planet. Inter.} {\bf 1997}, {\em
+ 103},~1--16.
+https://doi.org/10.1016/S0031-9201(97)00024-1.
+
+\bibitem[González-Maurel \em{et~al.}(2020)González-Maurel, Deegan, Le~Roux,
+ Harris, Troll, and Godoy]{Gonzalezetal2020}
+\textls[-20]{González-Maurel, O.; Deegan, F.M.; Le~Roux, P.; Harris, C.; Troll, V.R.;
+ Godoy, B.
+\newblock {Constraining the sub-arc, parental magma composition for the giant
+ Altiplano-Puna Volcanic Complex, northern Chile}.
+\newblock {\em Sci. Rep.} {\bf 2020}, {\em 10},~1--10.
+https://doi.org/10.1038/s41598-020-63454-1.}
+
+\bibitem[Lemenkova(2019)]{Lemenkova2019a}
+Lemenkova, P.
+\newblock {Geomorphological modelling and mapping of the Peru-Chile Trench by
+ GMT}.
+\newblock {\em Pol. Cartogr. Rev.} {\bf 2019}, {\em 51},~181--194.
+https://doi.org/10.2478/pcr-2019-0015.
+
+\bibitem[Petersen \em{et~al.}(2018)Petersen, Harmsen, Jaiswal, Rukstales, Luco,
+ Haller, Mueller, and Shumway]{Petersen}
+Petersen, M.D.; Harmsen, S.C.; Jaiswal, K.S.; Rukstales, K.S.; Luco, N.;
+ Haller, K.M.; Mueller, C.S.; Shumway, A.M.
+\newblock {Seismic Hazard, Risk, and Design for South America}.
+\newblock {\em Bull. Seismol. Soc. Am.} {\bf 2018},
+ {\em 108},~781--800.
+https://doi.org/10.1785/0120170002.
+
+\bibitem[Barone \em{et~al.}(2019)Barone, Fedi, Tizzani, and Castaldo]{Barone}
+Barone, A.; Fedi, M.; Tizzani, P.; Castaldo, R.
+\newblock Multiscale Analysis of DInSAR Measurements for Multi-Source
+ Investigation at Uturuncu Volcano (Bolivia).
+\newblock {\em Remote Sens.} {\bf 2019}, {\em 11}, 703.
+https://doi.org/10.3390/rs11060703.
+
+\bibitem[Zhu(2003)]{Zhu}
+Zhu, L.
+\newblock Recovering permanent displacements from seismic records of the June
+ 9, 1994 Bolivia deep earthquake.
+\newblock {\em Geophys. Res. Lett.} {\bf \hl{2003}%MDPI: Please add pagination/article number if there is one.
+}, {\em 30}. https://doi.org/10.1029/2003GL017302.
+
+\bibitem[Ekström(1995)]{Ekstroem1995}
+Ekström, G.
+\newblock Calculation of static deformation following the Bolivia Earthquake by
+ summation of Earth's normal modes.
+\newblock {\em Geophys. Res. Lett.} {\bf 1995}, {\em 22},~2289--2292.
+https://doi.org/10.1029/95GL01435.
+
+\bibitem[Heine(2004)]{Heine}
+Heine, K. {Late Quaternary glaciations of Bolivia}.
+\newblock In {\em {Developments in Quaternary Sciences}}; Elsevier: \hl{Amsterdam, The Netherlands,} %newly added information, please confirm
+2004; Volume 2, Chapter {Part C}, pp. 83--88.
+https://doi.org/10.1016/S1571-0866(04)80114-3.
+
+\bibitem[La~Frenierre \em{et~al.}(2011)La~Frenierre, Huh, and Mark]{Frenierre}
+La~Frenierre, J.; Huh, K.; Mark, B.G. Ecuador, Peru And Bolivia.
+\newblock In {\em {Quaternary Glaciations---Extent and Chronology: A Closer
+ Look}}; Elsevier: Amsterdam, The Netherlands, 2011; Volume 15, \hl{\emph{Developments
+ in Quaternary Sciences}, Chapter 56, pp. 773--802.} %MDPI: Please confirm that this should be removed or check if it is part of some other reference.
+
+\bibitem[Latrubesse \em{et~al.}(2009)Latrubesse, Baker, and
+ Argollo]{Latrubesse2009}
+Latrubesse, E.M.; Baker, P.A.; Argollo, J.
+\newblock {Geomorphology of Natural Hazards and Human-induced Disasters in
+ Bolivia}.
+\newblock {\em Dev. Earth Surf. Process.} {\bf 2009}, {\em
+ 13},~181--194.
+https://doi.org/10.1016/S0928-2025(08)10010-4.
+
+\bibitem[Latrubesse \em{et~al.}(2012)Latrubesse, Stevaux, Cremon, May, Tatumi,
+ Hurtado, Bezada, and Argollo]{Latrubesse2012}
+Latrubesse, E.M.; Stevaux, J.C.; Cremon, E.H.; May, J.H.; Tatumi, S.H.;
+ Hurtado, M.A.; Bezada, M.; Argollo, J.B.
+\newblock {Late Quaternary megafans, fans and fluvio-aeolian interactions in
+ the Bolivian Chaco, Tropical South America}.
+\newblock {\em Palaeogeogr. Palaeoclimatol. Palaeoecol.} {\bf 2012},
+ {\em 356--357},~75--88.
+https://doi.org/10.1016/j.palaeo.2012.04.003.
+
+\bibitem[May \em{et~al.}(2008)May, Argollo, and Veit]{May2008}
+May, J.H.; Argollo, J.; Veit, H.
+\newblock {Holocene landscape evolution along the Andean piedmont, Bolivian
+ Chaco}.
+\newblock {\em Palaeogeogr. Palaeoclimatol. Palaeoecol.} {\bf 2008},
+ {\em 260},~505--520.
+https://doi.org/10.1016/j.palaeo.2007.12.009.
+
+\bibitem[Dumont and Fournier(1994)]{Dumont}
+Dumont, J.F.; Fournier, M.
+\newblock {Geodynamic environment of Quaternary morphostructures of the
+ subandean foreland basins of Peru and Bolivia: Characteristics and study
+ methods}.
+\newblock {\em Quat. Int.} {\bf 1994}, {\em 21},~129--142.
+https://doi.org/10.1016/1040-6182(94)90027-2.
+
+\bibitem[May(2013)]{May2013}
+May, J.H.
+\newblock {Dunes and dunefields in the Bolivian Chaco as potential records of
+ environmental change}.
+\newblock {\em Aeolian Res.} {\bf 2013}, {\em 10},~89--102.
+https://doi.org/10.1016/j.aeolia.2013.04.002.
+
+\bibitem[Holder \em{et~al.}(2019)Holder, Viete, Brown, and Johnson]{Holder}
+Holder, R.M.; Viete, D.R.; Brown, M.; Johnson, T.E.
+\newblock {Metamorphism and the evolution of plate tectonics}.
+\newblock {\em Nature} {\bf 2019}, {\em 572},~378--381.
+https://doi.org/10.1038/s41586-019-1462-2.
+
+\bibitem[Tapia \em{et~al.}(2019)Tapia, Murray, Ormachea, Tirado, and
+ Nordstrom]{Tapia}
+\textls[-25]{Tapia, J.; Murray, J.; Ormachea, M.; Tirado, N.; Nordstrom, D.K.
+\newblock {Origin, distribution, and geochemistry of arsenic in the
+ Altiplano-Puna plateau of Argentina, Bolivia, Chile, and Perú}.
+\newblock {\em Sci. Total. Environ.} {\bf 2019}, {\em
+ 678},~309--325.
+https://doi.org/10.1016/j.scitotenv.2019.04.084.}
+
+\bibitem[Bar \em{et~al.}(2019)Bar, Long, Wagner, Beck, Zandt, and Tavera]{Bar}
+\textls[-20]{Bar, N.; Long, M.D.; Wagner, L.S.; Beck, S.L.; Zandt, G.; Tavera, H.
+\newblock {Receiver function analysis reveals layered anisotropy in the crust
+ and upper mantle beneath southern Peru and northern Bolivia}.
+\newblock {\em Tectonophysics} {\bf 2019}, {\em 753},~93--110.
+https://doi.org/10.1016/j.tecto.2019.01.007.}
+
+\bibitem[Lemenkova(2020)]{Lemenkova2020e}
+Lemenkova, P.
+\newblock {GRASS GIS for topographic and geophysical mapping of the Peru-Chile
+ Trench}.
+\newblock {\em Forum Geogr.} {\bf 2020}, {\em 19},~143--157.
+https://doi.org/10.5775/fg.2020.009.d.
+
+\bibitem[Millington \em{et~al.}(2003)Millington, Velez-Liendo, and
+ Bradley]{Millington}
+Millington, A.C.; Velez-Liendo, X.M.; Bradley, A.V.
+\newblock {Scale dependence in multitemporal mapping of forest fragmentation in
+ Bolivia: implications for explaining temporal trends in landscape ecology and
+ applications to biodiversity conservation}.
+\newblock {\em ISPRS J. Photogramm. Remote. Sens.} {\bf 2003},
+ {\em 57},~289--299.
+https://doi.org/10.1016/S0924-2716(02)00154-5.
+
+\bibitem[Lemenkova(2021)]{Lemenkova202137}
+Lemenkova, P.
+\newblock {Evaluating land cover types from Landsat TM using SAGA GIS for
+ vegetation mapping based on ISODATA and K-means clustering}.
+\newblock {\em Acta Agric. Serbica} {\bf 2021}, {\em 26},~159--165.
+https://doi.org/10.5937/AASer2152159L.
+
+\bibitem[Vella and Loget(2021)]{Vella}
+Vella, M.A.; Loget, N.
+\newblock {Geomorphological map of the Tiwanaku River watershed in Bolivia:
+ Implications for past and present human occupation}.
+\newblock {\em CATENA} {\bf 2021}, {\em 206}, 105508.
+https://doi.org/10.1016/j.catena.2021.105508.
+
+\bibitem[Lemenkova(2021)]{Lemenkova202120}
+Lemenkova, P.
+\newblock {Scripting cartographic techniques of R and GMT for geomorphological
+ and topographic mapping of Peru}.
+\newblock {\em Entorno Geogr.} {\bf 2021}, {\em 22},~36--55.
+https://doi.org/10.25100/eg.v0i22.11331.
+
+\bibitem[Nedel \em{et~al.}(2021)Nedel, Fuck, Ruiz, Matos-Salinas, and Da~C.
+ D.~Ferreira]{Nedel}
+Nedel, I.M.; Fuck, R.A.; Ruiz, A.S.; Matos-Salinas, G.R.; Da~C. D.~Ferreira, A.
+\newblock {Timing of Proterozoic magmatism in the Sunsas belt, Bolivian
+ Precambrian Shield, SW Amazonian Craton}.
+\newblock {\em Geosci. Front.} {\bf 2021}, {\em 12},~101247.
+https://doi.org/10.1016/j.gsf.2021.101247.
+
+\bibitem[Jemio(2008)]{Jemio}
+Jemio, L.C. \emph{Booms and Collapses of the Hydro Carbons Sector in Bolivia}; \hl{Technical Report; Development Research Working Paper Series 09/2008}%MDPI: Please confirm if this should be removed.
+; Institute for Advanced Development Studies: La Paz, Bolivia, 2008.
+
+\bibitem[Collinson(1966)]{Collinson}
+Collinson, D.W.
+\newblock {Magnetic Properties of the Taiguati Formation, Bolivia}.
+\newblock {\em Geophys. J. Int.} {\bf 1966}, {\em
+ 11},~337--347.
+https://doi.org/10.1111/ j.1365-246X.1966.tb03087.x.
+
+\bibitem[Lindh and Lemenkova(2022)]{Lindh2022}
+Lindh, P.; Lemenkova, P.
+\newblock {Geochemical tests to study the effects of cement ratio on potassium
+ and TBT leaching and the pH of the marine sediments from the Kattegat Strait,
+ Port of Gothenburg, Sweden}.
+\newblock {\em Baltica} {\bf 2022}, {\em 35},~47--59.
+https://doi.org/10.5200/baltica.2022.1.4.
+
+\bibitem[Ocola and Meyer(1972)]{Ocola}
+Ocola, L.C.; Meyer, R.P.
+\newblock {Crustal Low-Velocity Zones Under the Peru-Bolivia Altiplano}.
+\newblock {\em Geophys. J. Int.} {\bf 1972}, {\em
+ 30},~199--208.
+https://doi.org/10.1111/j.1365-246X.1972.tb02353.x.
+
+\bibitem[Corchete \em{et~al.}(2006)Corchete, Flores, and Oviedo]{Corchete}
+Corchete, V.; Flores, D.; Oviedo, F.
+\newblock {The first high-resolution gravimetric geoid for the Bolivian
+ tableland: BOLGEO}.
+\newblock {\em Phys. Earth Planet. Inter.} {\bf 2006}, {\em
+ 157},~250--256.
+https://doi.org/10.1016/j.pepi.2006.04.004.
+
+\bibitem[Hinojosa(2012)]{Hinojosa}
+Hinojosa, L.;~Hennermann, K.
+\newblock {A GIS approach to ecosystem services and rural territorial dynamics
+ applied to the case of the gas industry in Bolivia}.
+\newblock {\em Appl. Geogr.} {\bf 2012}, {\em 34},~487--497.
+https://doi.org/10.1016/j.apgeog.2012.02.003.
+
+\bibitem[Lindh and Lemenkova(2021)]{Lindh2021b}
+Lindh, P.; Lemenkova, P.
+\newblock {Resonant Frequency Ultrasonic P-Waves for Evaluating Uniaxial
+ Compressive Strength of the Stabilized Slag–Cement Sediments}.
+\newblock {\em Nord. Concr. Res.} {\bf 2021}, {\em 65},~39--62.
+https://doi.org/10.2478/ncr-2021-0012.
+
+\end{thebibliography}
+\end{adjustwidth}
+\end{document}
+
