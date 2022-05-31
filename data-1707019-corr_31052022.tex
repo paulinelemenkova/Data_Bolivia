@@ -53,7 +53,7 @@
 \address[1]{%
 Laboratory of Image Synthesis and Analysis, \'Ecole Polytechnique de Bruxelles, Universit\'e Libre de Bruxelles, Brussels, Belgium; polina.lemenkova@ulb.be or pauline.lemenkova@gmail.com; Tel.: +32-471860459} 
 %MDPI: Please confirm second e-mail. - Yes, correct.
-%MDPI: Please confirm order and units in affiliation, please confirm brackets (check if Faculty should be outside of brackets) and please check if each unit could be in English language. - Yes, everything is correct.
+%MDPI: Please confirm order and units in affiliation, please confirm brackets (check if Faculty should be outside of brackets) and please check if each unit could be in English language. - Yes, everything is correct. The official names of the organisation are French.
 %MDPI: Please check if these information (building, campus and street information) are necessary, if not, please remove them. - Ok, this information is deleted.
 % Contact information of the corresponding author
 %\corres{Correspondence: polina.lemenkova@ulb.be}
@@ -194,6 +194,8 @@ The most significant earthquake {in} Bolivia was located 11 km NNE of Carandayti
 
 \textls[-10]{Using scripting techniques of GMT has many applications in geosciences,} \mbox{for example} the {analysis of the} geologic setting of the Earth, climate modelling, exploring the atmosphere--ocean--solid earth interactions, {which require} advanced mapping, and many more. \linebreak \mbox{Rapid processing} of maps by GMT enables producing a series of maps, which is a crucial source of geo-information for such tasks. To fully utilise the potential of GMT, the abilities and advantages of {the} modern scripting approaches should be used. In this research, I demonstrated the functionality of GMT and QGIS for {the} thematic mapping of the Andes region {using} the geological and geophysical datasets {available from the open sources}. Currently{, the} geo-information data are available online in many sources, which increases the need for rapid and robust processing of these data, based on {the} availability. 
 
+To this end, a data-driven approach of GMT and QGIS was introduced in this paper for the thematic geological--geophysical mapping of the Andes region, Bolivia. Using the functionality of this program, this paper presented a workflow where I showed that it performs well on cartographic data processing without the manual tedious workflow usually applied \mbox{in cartography}. The geological features of regional objects in the Andes were mapped to show geological structure of Bolivia.
+
 \vspace{-6pt}
 \begin{figure}[H]
 \center
@@ -202,11 +204,9 @@ The most significant earthquake {in} Bolivia was located 11 km NNE of Carandayti
  gravity gradient in Bolivia. Visualisation: GMT. Source: author.\label{fig6}}
 \end{figure} 
 
-To this end, a data-driven approach of GMT and QGIS was introduced in this paper for the thematic geological--geophysical mapping of the Andes region, Bolivia. Using the functionality of this program, this paper presented a workflow where I showed that it performs well on cartographic data processing without the manual tedious workflow usually applied \mbox{in cartography}. The geological features of regional objects in the Andes were mapped to show geological structure of Bolivia.
-
 The most important geological units were mapped to show the outcrops of various geologic time: Precambrian-Devonian, {Palaeozoic}, Carboniferous, Cambrian, Ordovician, Permian, {Tertiary} Jurassic, Mesozoic, Cenozoic, Silurian, Triassic, and Quaternary as the major units. The algorithms of GMT processed well relatively large files (each raster file mapped for visualisation of the geoid, gravity, and seismicity has a size of several hundreds of MB) and converted these data into GMT native format for processing. Some complex regions of seismicity with overlapped sources of earthquakes were visualised using various colours and sizes of legend units for a better interpretation. Graphical representations of the maps were illustrated in relevant sections. 
 
-{Mapping} multi-source geo-information data are based on {the} processing and visualising {of} relevant thematic layers showing the geological and geophysical features of the target objects{, such as} free-air gravity anomalies, vertical gravity gradients, earthquakes, and other concepts. The major principle of GMT {consists of} creating the {lines} of code based on {its} syntax language. 
+{Mapping} multi-source geo-information data are based on {the} processing and visualising {of} relevant thematic layers showing the geological and geophysical features of the target objects{, such as} free-air gravity anomalies, vertical gravity gradients, earthquakes, and other concepts. The major principle of GMT {consists of} creating the {lines} of code based on {its} syntax language. For instance, the projection and selected colour palettes were set up experimentally for each corresponding {geographic} phenomenon to better show the variations \mbox{in levels}{. Such adjustments enabled better} indicating the correlations between the topography and geophysics of the Andes region{. 
 
 \begin{figure}[H]
 \center
@@ -215,7 +215,7 @@ The most important geological units were mapped to show the outcrops of various 
  in Bolivia and the Central Andes. Visualisation: GMT. Source: author.\label{fig7}}
 \end{figure} 
 
-For instance, I set up experimentally the projection and selected colour palettes for each corresponding {geographic} phenomenon to better show the variations \mbox{in levels}{. Such adjustments enabled better} indicating the correlations between the topography and geophysics of the Andes region{. Moreover, the integrated use of the techniques of }QGIS and GMT {was used} to identify the relationships between the geological and geophysical phenomena of the Earth through the prepared maps. Based on the setup parameters of GMT, {a }series of maps {was created using a machine-based approach} using scripts run from the console{. A }step-by-step cartographic process applied for the presented maps {is shown in the scripts available in the GitHub repository with the provided link}.
+Moreover, the integrated use of the techniques of }QGIS and GMT {was used} to identify the relationships between the geological and geophysical phenomena of the Earth through the prepared maps. Based on the setup parameters of GMT, {a }series of maps {was created using a machine-based approach} using scripts run from the console{. A }step-by-step cartographic process applied for the presented maps {is shown in the scripts available in the GitHub repository with the provided link}.
 
 \textls[-20]{This workflow arrived at {the} data processing and visualisation on the presented series of maps {showing} the geologic, {geophysical,} and topographic {features} of Bolivia. \mbox{However, certain}} steps in {a} cartographic workflow require manual adjusting and improvements in {}QGIS compared to {}GMT, which demonstrates a higher level of automation in the {spatial} data processing {of the latter}. The most geologically complicated regions (folds in the Bolivian Andes) were mapped using {the} enlarged zoom, to gain more insights {into} the visual characteristics of the small areas ({e.g.,}see the Devonian and Ordovician outcrops in Figure~\ref{fig2}), {as well as} to discriminate the strata from the undifferentiated areas. To do so, I {enlarged the} selected areas on the map{ }and controlled {the} visualisation manually using a zoom function of QGIS. Specifically, I identified {the} densely interspersed outcrops of {the} Cretaceous-Tertiary volcanics (Cv), Precambrian-Devonian (AD), and {Palaeozoic} (PZ) units{ }in the Bolivian Andes, which demonstrated a {distinct} correlation {between the} gravity anomaly and {the} topographic heights {of} the same territory. 
 
