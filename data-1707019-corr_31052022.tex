@@ -38,7 +38,7 @@
 %\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
 
 % Authors, for the paper (add full first names)
-\Author{Polina Lemenkova \orcidA{}}%MDPI: 
+\Author{Polina Lemenkova \orcidA{}}%MDPI: Please confirm Orcid number. - yes, correct.
 % \dagger,\ddagger
 %\longauthorlist{yes}
 
@@ -51,8 +51,10 @@
 
 % Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
 \address[1]{%
-Laboratory of Image Synthesis and Analysis, \'Ecole Polytechnique de Bruxelles, Universit\'e Libre de Bruxelles, Brussels, Belgium; polina.lemenkova@ulb.be or pauline.lemenkova@gmail.com; Tel.: +32-471860459} %Author: yes, everything is correct.
-
+Laboratory of Image Synthesis and Analysis, \'Ecole Polytechnique de Bruxelles, Universit\'e Libre de Bruxelles, Brussels, Belgium; polina.lemenkova@ulb.be or pauline.lemenkova@gmail.com; Tel.: +32-471860459} 
+%MDPI: Please confirm second e-mail. - Yes, correct.
+%MDPI: Please confirm order and units in affiliation, please confirm brackets (check if Faculty should be outside of brackets) and please check if each unit could be in English language. - Yes, everything is correct.
+%MDPI: Please check if these information (building, campus and street information) are necessary, if not, please remove them. - Ok, this information is deleted.
 % Contact information of the corresponding author
 %\corres{Correspondence: polina.lemenkova@ulb.be}
 
@@ -92,16 +94,18 @@ This study is focused on processing {spatial} data {for} cartographic visualisat
 	\includegraphics[width=12.0 cm]{Fig_01}
 	\caption{Topographic map of the study area. Visualisation: GMT. Source: author.\label{fig1}}
 \end{figure} 
-
+%MDPI: Figure moved after its first ctiation. Please confirm. - Ok.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Materials and Methods}
 
 Methods of GIS mapping and geoinformatics passed several epochs from their onset in the 1970s, including rapid development of computer technologies and progress in spatial data standards and formats. {Besides, the approaches related to }remote sensing{, }Earth observation, and geological data{ processing largely use spatial data} \cite{Allenby1987,Lindh2021,Lemenkova202127}. {\mbox{Although these} approaches have advantages in geospatial data processing, those methods are not efficient enough for processing large datasets in real time, which requires} machine-based cartographic data visualisation. Currently, the contemporary methods of spatial data processing include a high degree of computing and scripting with the recent application of machine learning, scripting, and programming in geosciences \cite{Lietal,Lemenkov2021a,Zhou,Lemenkov2021b}. 
 
 \textls[-20]{The current study {aimed} to identify the distribution and magnitude of earthquakes in the Bolivian Andes in the context of the geologic, geophysical, and topographic situation. The study {was} performed using the technical integration of QGIS and GMT scripting tools {applied} to {Bolivia. The} topographic elevation data, geologic provinces and units, {as well as} seismic events obtained from the IRIS database {were mapped}. The five full scripts used in this study for GMT mapping are available in the GitHub repository of the author with public open-access}: \url{https://github.com/paulinelemenkova/Mapping\_Bolivia\_GMT\_Scripts} (accessed on 31.05.2022).
-
-The topographic map (\hl{Figures} %MDPI: Figure 7 is cited before Figures 2-6, please check if this should be invalid citation or move Figure 7 below this paraghraph and revise each figure citation.
-~\ref{fig1} and \ref{fig7}) was mapped as a background {for the} IRIS seismic data. {It was derived} from {the} General Bathymetric Chart of the Oceans (GEBCO) gridded bathymetry and topography dataset \cite{Schenke2016}. {The} GEBCO presents consistent and accurate digital elevation data covering the Earth{,} largely used in {the} Earth sciences {as a} reliable data source. The unprecedentedly high resolution (15 arc second) of {the} GEBCO grid enables using it as a fine cartographic grid both for topographic mapping and as a background for {the} overlaying thematic maps \cite{Lemenkova2020b}{.} 
+%MDPI Please add accessed date if needed. - Added.
+%MDPI: Figures 4-7 are cited before Figures 2 and 3, please check if this should be invalid citation or move Figures 4-7 below this paraghraph and revise each figure citation. - Corrected to 'GMT mapping', invalid citations are removed.
+The topographic map (Figure~\ref{fig1})
+%MDPI: Figure 7 is cited before Figures 2-6, please check if this should be invalid citation or move Figure 7 below this paragraph and revise each figure citation. - Invalid citation is removed.
+ was mapped as a background {for the} IRIS seismic data. {It was derived} from {the} General Bathymetric Chart of the Oceans (GEBCO) gridded bathymetry and topography dataset \cite{Schenke2016}. {The} GEBCO presents consistent and accurate digital elevation data covering the Earth{,} largely used in {the} Earth sciences {as a} reliable data source. The unprecedentedly high resolution (15 arc second) of {the} GEBCO grid enables using it as a fine cartographic grid both for topographic mapping and as a background for {the} overlaying thematic maps \cite{Lemenkova2020b}{.} 
 
 {The} EGM-2008 \cite{Pavlis} digital geoid model {was used} to show {variations} in gravity over the territory of Bolivia that {correlate} with the topographic map {(}\hl{Figures} %MDPI: Figure 4 is cited before Figures 2 and 3, please check if this should be invalid citation or move Figure 4 below this paraghraph and revise each figure citation.
 ~\ref{fig1} and \ref{fig4}). {A} general increase of gravity values {is notable} in the southwest direction, which coincides {well} with the {geographic} extent of {the} Central Andes. The data on{ }gravity (\hl{Figures} %MDPI: Figures 5 and 6 are cited before Figures 2 and 3, please check if this should be invalid citation or move Figures 5 and 6 below this paraghraph and revise each figure citation.
